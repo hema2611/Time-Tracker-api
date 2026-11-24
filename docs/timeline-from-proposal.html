@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Timeline from proposal – prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f6f8;--card:#fff;--line:#e4e6eb;--text:#1d2129;--muted:#6b7280;--accent:#4f46e5;--accent-bg:#eef2ff;--amber:#b45309;--amber-bg:#fef3c7;--green:#15803d;--green-bg:#dcfce7}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,sans-serif;font-size:14px;color:var(--text);background:var(--bg)}
+header{background:#111827;color:#fff;padding:14px 24px;display:flex;justify-content:space-between;align-items:center}
+header b{font-size:16px}header span{color:#94a3b8;font-size:12px}
+.wrap{display:grid;grid-template-columns:380px 1fr;gap:16px;padding:16px 24px;align-items:start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px}
+.chat{display:flex;flex-direction:column;height:calc(100vh - 90px);position:sticky;top:16px}
+.chat-h{padding:12px 16px;border-bottom:1px solid var(--line);font-weight:600}
+.msgs{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.m{max-width:92%;padding:9px 12px;border-radius:10px;line-height:1.5}
+.ai{background:var(--accent-bg);color:#1e1b4b;align-self:flex-start;border-bottom-left-radius:3px}
+.me{background:#111827;color:#fff;align-self:flex-end;border-bottom-right-radius:3px}
+.opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.opt{border:1px solid #c7d2fe;background:#fff;color:var(--accent);border-radius:999px;padding:4px 10px;font:inherit;font-size:13px;cursor:pointer}
+.opt:hover{background:var(--accent);color:#fff}
+.opt.skip{border-color:var(--line);color:var(--muted)}
+.inrow{display:flex;gap:6px;padding:10px;border-top:1px solid var(--line)}
+.inrow input{flex:1;border:1px solid var(--line);border-radius:6px;padding:8px 10px;font:inherit}
+.btn{border:1px solid var(--line);background:#fff;border-radius:6px;padding:7px 12px;font:inherit;cursor:pointer}
+.btn.p{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.g{background:var(--green);color:#fff;border-color:var(--green)}
+.mini{display:grid;grid-template-columns:1fr 70px;gap:6px;align-items:center;margin-top:8px;font-size:13px}
+.mini input{border:1px solid #c7d2fe;border-radius:6px;padding:4px 6px;font:inherit;width:100%}
+.pane{padding:16px 18px}
+h1{font-size:20px;margin:0 0 4px;font-weight:600}h2{font-size:15px;margin:0 0 10px;font-weight:600}
+.sub{color:var(--muted);margin:0}
+.small{font-size:12px;color:var(--muted)}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:500}
+.you{background:var(--green-bg);color:var(--green)}.ass{background:var(--amber-bg);color:var(--amber)}.prop{background:var(--accent-bg);color:var(--accent)}
+.empty{text-align:center;padding:70px 20px;color:var(--muted)}
+.upload{border:2px dashed #c7d2fe;border-radius:10px;padding:26px;text-align:center;background:#fafaff}
+.found{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:12px}
+.found .card{padding:10px 12px}
+.vers{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.ver{border:1px solid var(--line);background:#fff;border-radius:6px;padding:4px 10px;font:inherit;font-size:12px;cursor:pointer}
+.ver.on{border-color:var(--accent);color:var(--accent);background:var(--accent-bg);font-weight:500}
+table{width:100%;border-collapse:collapse}
+th{font-size:12px;color:var(--muted);font-weight:500;text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}
+td{padding:6px 8px;border-bottom:1px solid var(--line)}
+td input{border:1px solid transparent;border-radius:5px;padding:4px 6px;font:inherit;width:100%;background:transparent}
+td input:hover,td input:focus{border-color:var(--line);background:#fff;outline:none}
+tr.mod td{background:#fafafa;font-weight:600}
+.x{border:none;background:none;color:#9ca3af;cursor:pointer;font-size:16px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.final{background:var(--green-bg);color:var(--green);border-radius:8px;padding:10px 12px;margin-bottom:12px;font-weight:500}
+@media(max-width:900px){.wrap{grid-template-columns:1fr}.chat{height:520px;position:static}}
+</style>
+</head>
+<body>
+<header><div><b>Project Tracker</b> &nbsp;<span>Timeline from proposal · prototype (sample data, simulated AI)</span></div><span>Project: Retail ERP · Acme Retail</span></header>
+<div class="wrap">
+  <div class="card chat">
+    <div class="chat-h">Timeline assistant</div>
+    <div class="msgs" id="msgs"></div>
+    <div class="inrow"><input id="txt" placeholder="Type an answer or a change, e.g. 'make Payroll shorter'"><button class="btn p" onclick="sendText()">Send</button></div>
+  </div>
+  <div id="right" style="min-width:0"></div>
+</div>
+<script>
+const PROPOSAL={file:"Proposal_RetailERP_v1.pdf",modules:[
+ {name:"Employees module",features:[["Employee master",3],["Attendance",3],["Leave management",2]]},
+ {name:"Payroll module",features:[["Salary structure",2],["Payroll run",4],["Payslips & statutory",2]]},
+ {name:"Reports module",features:[["Standard reports",2],["Management dashboard",2]]}],
+ outScope:["Mobile app","Biometric device integration"],found:{duration:null,start:null}};
+const COL=["#6366f1","#0ea5e9","#10b981","#ec4899","#8b5cf6"];
+let A={start:null,total:null,modMonths:{},mode:null,uat:null,notes:[]};
+let step=0,versions=[],cur=-1,finalized=false,uploaded=false;
+const $=id=>document.getElementById(id);
+const fmt=d=>d.toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"2-digit"});
+function addWork(d,n){d=new Date(d);let k=0;while(k<n){d.setDate(d.getDate()+1);if(d.getDay()%6)k++}return d}
+function nextMon(){const d=new Date(2026,10,19);d.setDate(d.getDate()+((8-d.getDay())%7||7));return d}
+function say(html,who="ai"){const m=document.createElement("div");m.className="m "+who;m.innerHTML=html;$("msgs").appendChild(m);$("msgs").scrollTop=1e6;return m}
+function opts(list){return `<div class="opts">${list.map(([l,f,c])=>`<button class="opt ${c||""}" onclick="${f}">${l}</button>`).join("")}</div>`}
+function render(){
+ if(!uploaded){$("right").innerHTML=`<div class="card pane"><h1>Create timeline from proposal</h1><p class="sub">Upload the signed proposal. The assistant reads it and asks a few optional questions.</p>
+ <div class="upload" style="margin-top:16px"><div style="font-size:15px;font-weight:500">Drop proposal here (PDF / Word)</div><div class="small" style="margin:6px 0 14px">In this prototype, a sample proposal is used</div><button class="btn p" onclick="upload()">Use sample: ${PROPOSAL.file}</button></div></div>`;return}
+ if(cur<0){$("right").innerHTML=`<div class="card pane">${foundHtml()}</div><div class="card pane empty" style="margin-top:16px">Answer the questions on the left, or press <b>Skip</b>, and the timeline appears here.</div>`;return}
+ const v=versions[cur];
+ $("right").innerHTML=`<div class="card pane">${finalized?`<div class="final">Timeline v${cur+1} saved as final. You can still edit and save a new version.</div>`:""}
+ <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap"><div><h1>Retail ERP – project timeline</h1><p class="sub">${fmt(v.start)} → <b>${fmt(v.end)}</b> · ${v.wd} working days (~${(v.wd/22).toFixed(1)} months)</p></div>
+ <div class="vers"><span class="small">Versions:</span>${versions.map((x,i)=>`<button class="ver ${i===cur?"on":""}" onclick="cur=${i};finalized=false;render()">v${i+1}</button>`).join("")}<button class="btn" onclick="regen()">Regenerate</button><button class="btn g" onclick="finalize()">Save as final</button></div></div>
+ <div class="legend" style="margin:12px 0"><span><span class="pill you">You</span> from your answers</span><span><span class="pill prop">Proposal</span> written in proposal</span><span><span class="pill ass">AI assumed</span> please check</span></div>
+ ${chart(v)}</div>
+ <div class="card pane" style="margin-top:16px"><div style="display:flex;justify-content:space-between;align-items:center"><h2 style="margin:0">Edit timeline</h2><span class="small">Change names or days – dates and chart update instantly</span></div>
+ <table style="margin-top:8px"><tr><th style="width:40%">Module / section</th><th style="width:90px">Work days</th><th>Start</th><th>Finish</th><th>Source</th><th></th></tr>
+ ${v.rows.map((r,i)=>r.mod?`<tr class="mod"><td><input value="${r.name}" onchange="ed(${i},'name',this.value)"></td><td>${r.days}</td><td>${fmt(r.s)}</td><td>${fmt(r.e)}</td><td>${src(r.src)}</td><td><button class="btn" style="padding:3px 8px;font-size:12px" onclick="addSec(${i})">+ section</button></td></tr>`
+  :`<tr><td style="padding-left:22px"><input value="${r.name}" onchange="ed(${i},'name',this.value)"></td><td><input type="number" min="1" value="${r.days}" onchange="ed(${i},'days',+this.value)"></td><td>${fmt(r.s)}</td><td>${fmt(r.e)}</td><td>${src(r.src)}</td><td><button class="x" title="Remove" onclick="del(${i})">×</button></td></tr>`).join("")}
+ </table><div style="margin-top:10px"><button class="btn" onclick="addMod()">+ Add module</button></div>
+ <p class="small" style="margin:14px 0 0">Out of scope (from proposal): ${PROPOSAL.outScope.join(", ")}</p></div>`}
+const src=s=>s==="you"?`<span class="pill you">You</span>`:s==="prop"?`<span class="pill prop">Proposal</span>`:`<span class="pill ass">AI assumed</span>`;
+function foundHtml(){return `<h2>What the assistant found in ${PROPOSAL.file}</h2><div class="found">${PROPOSAL.modules.map((m,i)=>`<div class="card"><b style="color:${COL[i]}">${m.name}</b><div class="small" style="margin-top:4px">${m.features.map(f=>f[0]).join(" · ")}</div></div>`).join("")}<div class="card"><b>Not found</b><div class="small" style="margin-top:4px">Start date, total duration, module durations</div></div></div>`}
+function upload(){uploaded=true;render();say(`I read <b>${PROPOSAL.file}</b>. I found <b>3 modules</b> with <b>8 features</b>, and 2 out-of-scope items. It doesn't say how long anything takes.<br><br>A few quick questions. All of them are optional: press <b>Skip</b> and I'll assume.`);ask()}
+function ask(){
+ if(step===0)say(`<b>1.</b> When will the project start?${opts([["Next Monday","ans('start','mon')"],["1 Dec 2026","ans('start','2026-12-01')"],["Skip","ans('start',null)","skip"]])}<div class="small" style="margin-top:6px">Or type a date, e.g. 2026-12-07</div>`);
+ if(step===1)say(`<b>2.</b> What's the expected total timeline?${opts([["3 months","ans('total',3)"],["4 months","ans('total',4)"],["6 months","ans('total',6)"],["Skip","ans('total',null)","skip"]])}<div class="small" style="margin-top:6px">Or type a number of months</div>`);
+ if(step===2)say(`<b>3.</b> How many months for each module? Fill only what you know.${PROPOSAL.modules.map((m,i)=>`<div class="mini"><span>${m.name}</span><input id="mm${i}" type="number" step="0.5" min="0" placeholder="auto"></div>`).join("")}${opts([["Use these","modAns()"],["Skip","ans('modMonths',{})","skip"]])}`);
+ if(step===3)say(`<b>4.</b> Should modules run one after another, or overlap?${opts([["One after another","ans('mode','seq')"],["Overlap a little","ans('mode','overlap')"],["Skip","ans('mode',null)","skip"]])}`);
+ if(step===4)say(`<b>5.</b> Add testing (UAT) and a buffer at the end?${opts([["Yes, add both","ans('uat',true)"],["No","ans('uat',false)"],["Skip","ans('uat',null)","skip"]])}`);
+}
+function ans(k,v){disableOpts();const label=v===null||(typeof v==="object"&&!Object.keys(v).length)?"Skip":k==="start"?(v==="mon"?"Next Monday":v):k==="total"?v+" months":k==="mode"?(v==="seq"?"One after another":"Overlap a little"):k==="uat"?(v?"Yes, add both":"No"):"";
+ if(label)say(label,"me");
+ if(k==="start")A.start=v==="mon"?{d:nextMon(),src:"you"}:v?{d:new Date(v),src:"you"}:null;else A[k]=v;
+ step++;if(step<5)ask();else{say(`Thanks. Generating the timeline…`);setTimeout(()=>{generate();say(`Done: <b>version ${versions.length}</b>. Anything marked <span class="pill ass">AI assumed</span> is my guess.<br><br>You can edit the table directly, or tell me a change, e.g. <i>"Payroll should be 6 weeks"</i>, <i>"start in January"</i>, <i>"make it shorter"</i>. Press <b>Regenerate</b> for a different version.`)},600)}}
+function modAns(){disableOpts();const o={};PROPOSAL.modules.forEach((m,i)=>{const v=+$("mm"+i).value;if(v>0)o[i]=v});say(Object.keys(o).length?Object.entries(o).map(([i,v])=>`${PROPOSAL.modules[i].name}: ${v} months`).join("<br>"):"Skip","me");A.modMonths=o;step++;ask()}
+function disableOpts(){document.querySelectorAll(".msgs .opt,.msgs .mini input").forEach(b=>b.disabled=true)}
+function generate(seed){
+ const vi=versions.length,jit=[1,.9,1.12,.95,1.05][vi%5];
+ const start=A.start?A.start.d:nextMon(),startSrc=A.start?"you":"ass";
+ const uat=A.uat!==false,mode=A.mode||"seq";
+ const W=f=>f[1]*5*jit;
+ let modDays=PROPOSAL.modules.map((m,i)=>A.modMonths[i]?{d:A.modMonths[i]*22,src:"you"}:{d:m.features.reduce((a,f)=>a+W(f),0),src:"ass"});
+ if(A.total){const fixed=modDays.filter(x=>x.src==="you").reduce((a,x)=>a+x.d,0),free=modDays.filter(x=>x.src!=="you").reduce((a,x)=>a+x.d,0);
+  let target=A.total*22*(uat?.85:1)*(mode==="overlap"?1.15:1)-fixed;if(free&&target>0)modDays=modDays.map(x=>x.src==="you"?x:{d:x.d*target/free,src:"ass"})}
+ if(A.short)modDays=modDays.map(x=>x.src==="you"?x:{d:x.d*A.short,src:"ass"});
+ const rows=[];
+ PROPOSAL.modules.forEach((m,i)=>{const tot=m.features.reduce((a,f)=>a+f[1],0);const mr={mod:true,name:m.name,src:modDays[i].src,ci:i};rows.push(mr);
+  const secs=m.features.map(f=>({name:f[0],days:Math.max(2,Math.round(modDays[i].d*f[1]/tot)),src:modDays[i].src,ci:i}));
+  secs.forEach(s=>rows.push(s))});
+ if(uat){rows.push({mod:true,name:"Testing & go-live",src:A.uat?"you":"ass",ci:4});rows.push({name:"UAT with client",days:10,src:A.uat?"you":"ass",ci:4});rows.push({name:"Buffer",days:Math.round(rows.filter(r=>!r.mod).reduce((a,r)=>a+r.days,0)*.08),src:"ass",ci:4})}
+ const v={rows,startSrc,start,mode};recalc(v);versions.push(v);cur=versions.length-1;finalized=false;render()}
+function recalc(v){let cursor=new Date(v.start);cursor.setDate(cursor.getDate()-1);let lastModEnd=null;
+ for(let i=0;i<v.rows.length;i++){const r=v.rows[i];if(!r.mod)continue;let j=i+1,secs=[];while(j<v.rows.length&&!v.rows[j].mod)secs.push(v.rows[j++]);
+  let c=new Date(cursor);
+  if(v.mode==="overlap"&&lastModEnd&&r.ci<4){const pm=v.rows.slice(0,i).filter(x=>x.mod).pop();c=addWork(pm.s,Math.max(1,Math.round(pm.days*.7))-1);c.setDate(c.getDate()-1)}
+  r.s=addWork(c,1);secs.forEach(s=>{s.s=addWork(c,1);s.e=addWork(c,s.days);c=new Date(s.e)});r.e=secs.length?c:r.s;r.days=secs.reduce((a,s)=>a+s.days,0);
+  cursor=new Date(r.e>cursor?r.e:cursor);lastModEnd=r.e}
+ v.end=v.rows.reduce((m,r)=>r.e>m?r.e:m,v.start);let d=new Date(v.start),wd=0;while(d<=v.end){if(d.getDay()%6)wd++;d.setDate(d.getDate()+1)}v.wd=wd}
+function chart(v){const s0=new Date(v.start.getFullYear(),v.start.getMonth(),1),e0=new Date(v.end.getFullYear(),v.end.getMonth()+1,1);const days=Math.round((e0-s0)/864e5),PX=Math.max(7,Math.min(14,760/days*1.4)),X=d=>Math.round((d-s0)/864e5)*PX,W=days*PX;
+ let mon="",grid="";for(let d=new Date(s0);d<e0;d.setMonth(d.getMonth()+1)){const n=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();mon+=`<div style="position:absolute;left:${X(d)}px;width:${n*PX}px;border-left:1px solid var(--line);padding:4px 6px;font-size:12px;font-weight:600">${d.toLocaleDateString("en-GB",{month:"short"}).toUpperCase()} ${String(d.getFullYear()).slice(2)}</div>`;grid+=`<div style="position:absolute;top:0;bottom:0;left:${X(d)}px;border-left:1px solid #eef0f3"></div>`}
+ let wk="";for(let d=new Date(s0);d<e0;d.setDate(d.getDate()+1))if(d.getDay()===1)wk+=`<div style="position:absolute;left:${X(d)}px;font-size:10px;color:var(--muted);padding:2px 3px">${d.getDate()}</div>`;
+ const H=r=>r.mod?34:30;
+ const names=v.rows.map(r=>`<div style="height:${H(r)}px;display:flex;align-items:center;gap:6px;padding-left:${r.mod?0:14}px;border-bottom:1px solid var(--line);font-weight:${r.mod?600:400};font-size:${r.mod?13:12}px;white-space:nowrap;overflow:hidden">${r.mod?`<span style="width:4px;height:18px;border-radius:2px;background:${COL[r.ci]}"></span>`:""}${r.name}</div>`).join("");
+ const bars=v.rows.map(r=>{const w=Math.max(PX,X(addWork(r.e,1))-X(r.s)-PX*0);const left=X(r.s);const col=COL[r.ci];
+  return `<div style="position:relative;height:${H(r)}px;border-bottom:1px solid var(--line)"><div title="${r.name}: ${fmt(r.s)} – ${fmt(r.e)}" style="position:absolute;left:${left}px;width:${Math.max(PX,X(r.e)-left+PX)}px;top:${r.mod?7:7}px;height:${r.mod?20:16}px;border-radius:4px;background:${r.mod?col:col+"55"};${r.src==="ass"&&!r.mod?`border:1px dashed ${col}`:""};color:${r.mod?"#fff":"#1f2937"};font-size:11px;line-height:${r.mod?20:15}px;padding:0 6px;white-space:nowrap;overflow:visible">${r.mod?`${fmt(r.s)} – ${fmt(r.e)}`:r.days+"d"}</div></div>`}).join("");
+ return `<div style="display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden"><div style="width:200px;flex-shrink:0;padding-left:10px;border-right:1px solid var(--line)"><div style="height:44px;border-bottom:1px solid var(--line)"></div>${names}</div>
+ <div style="overflow-x:auto;flex:1"><div style="width:${W}px;position:relative"><div style="position:relative;height:24px;border-bottom:1px solid var(--line);background:#fafafa">${mon}</div><div style="position:relative;height:20px;border-bottom:1px solid var(--line);background:#fafafa">${wk}</div><div style="position:relative">${grid}${bars}</div></div></div></div>
+ <div class="small" style="margin-top:6px">Dashed bars = AI-assumed days. Weekends skipped.</div>`}
+function ed(i,k,val){const v=versions[cur];if(k==="days"&&(!val||val<1))return render();v.rows[i][k]=val;if(k==="days")v.rows[i].src="you";recalc(v);finalized=false;render()}
+function del(i){const v=versions[cur];v.rows.splice(i,1);recalc(v);render()}
+function addSec(i){const v=versions[cur];let j=i+1;while(j<v.rows.length&&!v.rows[j].mod)j++;v.rows.splice(j,0,{name:"New section",days:5,src:"you",ci:v.rows[i].ci});recalc(v);render()}
+function addMod(){const v=versions[cur];const ci=v.rows.filter(r=>r.mod).length%5;v.rows.push({mod:true,name:"New module",src:"you",ci},{name:"New section",days:5,src:"you",ci});recalc(v);render()}
+function regen(){say("Regenerate","me");generate();say(`Here's <b>version ${versions.length}</b> with different assumptions. Your answers and the days you typed in are kept. Switch between versions at the top.`)}
+function finalize(){finalized=true;render();say(`Saved <b>version ${cur+1}</b> as the project timeline. This is only a plan: tracking happens elsewhere.`)}
+function sendText(){const t=$("txt").value.trim();if(!t)return;$("txt").value="";say(t,"me");
+ if(!uploaded){say("Please upload the proposal first.");return}
+ if(step<5){if(step===0&&/^\d{4}-\d{2}-\d{2}$/.test(t))return ans("start",t);if(step===1&&+t>0)return ans("total",+t);say("Please use the buttons above, or press Skip.");return}
+ const l=t.toLowerCase();let m;
+ if(m=l.match(/(employee|payroll|report)\w*\D+(\d+(?:\.\d+)?)\s*(week|month)/)){const i=["employee","payroll","report"].indexOf(m[1]);A.modMonths[i]=m[3]==="week"?+m[2]/4.4:+m[2];generate();say(`Updated ${PROPOSAL.modules[i].name} to ${m[2]} ${m[3]}s → <b>version ${versions.length}</b>.`);return}
+ if(/short|faster|reduce|less/.test(l)){A.short=(A.short||1)*.85;generate();say(`Made the assumed parts about 15% shorter → <b>version ${versions.length}</b>.`);return}
+ if(/long|more time|relax/.test(l)){A.short=(A.short||1)*1.15;generate();say(`Gave the assumed parts about 15% more time → <b>version ${versions.length}</b>.`);return}
+ if(m=l.match(/(\d+)\s*month/)){A.total=+m[1];generate();say(`Fitted into ${m[1]} months → <b>version ${versions.length}</b>.`);return}
+ if(/january|jan/.test(l)){A.start={d:new Date(2027,0,4),src:"you"};generate();say(`Moved the start to 4 Jan 2027 → <b>version ${versions.length}</b>.`);return}
+ if(/overlap|parallel/.test(l)){A.mode="overlap";generate();say(`Modules now overlap → <b>version ${versions.length}</b>.`);return}
+ say(`In the real tool the AI would understand this. In this prototype try: "Payroll 6 weeks", "make it shorter", "fit in 4 months", "start in January", "overlap modules".`)}
+$("txt").addEventListener("keydown",e=>{if(e.key==="Enter")sendText()});
+render();say("Hi! Upload the proposal on the right and I'll build a timeline from it.");
+</script>
+</body>
+</html>

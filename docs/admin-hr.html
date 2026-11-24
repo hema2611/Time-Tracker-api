@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project Tracker – Admin / HR prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f6f8;--card:#fff;--line:#e4e6eb;--text:#1d2129;--muted:#6b7280;--accent:#4f46e5;--accent-bg:#eef2ff;--green:#15803d;--green-bg:#dcfce7;--amber:#b45309;--amber-bg:#fef3c7;--red:#b91c1c;--red-bg:#fee2e2;--gray-bg:#f1f2f4}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,sans-serif;font-size:14px;color:var(--text);background:var(--bg)}
+.app{display:flex;min-height:100vh}
+aside{width:220px;background:#111827;color:#cbd5e1;padding:18px 12px;flex-shrink:0}
+aside .brand{color:#fff;font-weight:600;font-size:16px;padding:4px 10px 4px}
+aside .role{font-size:12px;color:#94a3b8;padding:0 10px 18px}
+aside a{display:block;color:#cbd5e1;text-decoration:none;padding:9px 10px;border-radius:6px;margin-bottom:2px}
+aside a:hover{background:#1f2937}
+aside a.active{background:#4f46e5;color:#fff}
+main{flex:1;padding:24px 28px;min-width:0}
+h1{font-size:22px;font-weight:600;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 20px}
+.grid{display:grid;gap:14px}
+.k6{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.kpi .n{font-size:26px;font-weight:600;margin-top:4px}
+.kpi .l{color:var(--muted);font-size:12px}
+.kpi .d{font-size:12px;margin-top:4px}
+h2{font-size:15px;font-weight:600;margin:0 0 12px}
+table{width:100%;border-collapse:collapse}
+th{font-size:12px;color:var(--muted);font-weight:500;text-align:left;padding:8px;border-bottom:1px solid var(--line)}
+td{padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr.click{cursor:pointer}tr.click:hover{background:#fafafa}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:500}
+.ok{background:var(--green-bg);color:var(--green)}.warn{background:var(--amber-bg);color:var(--amber)}.bad{background:var(--red-bg);color:var(--red)}.neu{background:var(--gray-bg);color:#374151}.acc{background:var(--accent-bg);color:var(--accent)}
+.row2{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-top:14px}
+.bar{height:8px;background:var(--gray-bg);border-radius:4px;overflow:hidden}
+.bar>span{display:block;height:100%;background:var(--accent)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:0 0 16px}
+.tabs button{border:none;background:none;padding:10px 14px;font:inherit;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent}
+.tabs button.on{color:var(--accent);border-color:var(--accent);font-weight:500}
+.gantt{position:relative}
+.g-row{display:grid;grid-template-columns:230px 1fr 130px;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--line)}
+.g-track{position:relative;height:22px;background:var(--gray-bg);border-radius:4px}
+.g-base{position:absolute;top:3px;height:6px;background:#c7d2fe;border-radius:3px}
+.g-cur{position:absolute;top:11px;height:8px;background:var(--accent);border-radius:3px}
+.g-cr{position:absolute;top:11px;height:8px;background:#f59e0b;border-radius:0 3px 3px 0}
+.phase{font-weight:600}
+.small{font-size:12px;color:var(--muted)}
+.feed div{padding:10px 0;border-bottom:1px solid var(--line)}
+.feed div:last-child{border:none}
+.stack{display:flex;height:14px;border-radius:4px;overflow:hidden}
+.stack span{display:block}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.cal div{background:#fff;min-height:84px;padding:6px;font-size:12px}
+.cal .h{min-height:auto;font-weight:500;color:var(--muted);text-align:center}
+.cal .o{background:#fafafa;color:#c0c4cc}
+.ev{display:block;margin-top:3px;padding:2px 5px;border-radius:4px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btn{border:1px solid var(--line);background:#fff;border-radius:6px;padding:7px 12px;font:inherit;cursor:pointer}
+.btn.p{background:var(--accent);color:#fff;border-color:var(--accent)}
+.toolbar{display:flex;gap:8px;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+input[type=text],select{border:1px solid var(--line);border-radius:6px;padding:7px 10px;font:inherit}
+.chk{text-align:center}
+.note{background:var(--accent-bg);color:#3730a3;border-radius:8px;padding:10px 12px;font-size:13px;margin-bottom:16px}
+@media(max-width:860px){aside{display:none}.row2{grid-template-columns:1fr}.g-row{grid-template-columns:140px 1fr}.g-row>:last-child{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <div class="brand">Project Tracker</div>
+  <div class="role">Logged in as Admin / HR</div>
+  <nav id="nav"></nav>
+</aside>
+<main id="view"></main>
+</div>
+<script>
+const NAV=[["dashboard","Dashboard"],["projects","Projects"],["rework","Rework report"],["team","Team & workload"],["calendar","Calendar"],["users","Users & roles"]];
+const projects=[
+ {id:"p1",name:"Retail ERP",client:"Acme Retail",tl:"Arun",phase:"Phase 1 – Employees",progress:62,health:"warn",healthT:"3 days behind",openCR:6,reverts:3,pending:2,golive:"22 Jan (baseline 15 Jan)"},
+ {id:"p2",name:"Clinic booking app",client:"CarePlus",tl:"Priya",phase:"Phase 2 – Payments",progress:78,health:"ok",healthT:"On track",openCR:2,reverts:0,pending:1,golive:"10 Dec"},
+ {id:"p3",name:"Logistics portal",client:"FastMove",tl:"Arun",phase:"UAT",progress:91,health:"bad",healthT:"Client verification stuck",openCR:5,reverts:2,pending:3,golive:"30 Nov (baseline 20 Nov)"},
+ {id:"p4",name:"School website",client:"Greenfield School",tl:"Divya",phase:"Design",progress:25,health:"ok",healthT:"On track",openCR:1,reverts:0,pending:0,golive:"15 Feb"}];
+const sections=[
+ {id:"S-1",name:"Employee master",owner:"Karthik",bs:0,bd:10,cs:0,cd:10,cr:0,crs:"",p:100},
+ {id:"S-2",name:"Attendance",owner:"Meena",bs:10,bd:12,cs:10,cd:12,cr:2,crs:"CR-7",p:40},
+ {id:"S-3",name:"Leave management",owner:"Karthik",bs:22,bd:8,cs:24,cd:8,cr:0,crs:"",p:0},
+ {id:"S-4",name:"Payroll",owner:"Meena",bs:30,bd:15,cs:32,cd:15,cr:3,crs:"CR-9, CR-11",p:0},
+ {id:"S-5",name:"Reports",owner:"Ravi",bs:45,bd:6,cs:50,cd:6,cr:0,crs:"",p:0},
+ {id:"S-6",name:"Shift roster (from CR-11)",owner:"Ravi",bs:null,bd:0,cs:56,cd:4,cr:4,crs:"CR-11 new scope",p:0}];
+const crs=[
+ ["CR-7","Add late-mark rule to attendance","Change","S-2","WhatsApp · 12 Nov","+2 days","Approved","acc"],
+ ["CR-8","Revert attendance colour change","Revert of CR-5","S-2","Meeting 5 · 13 Nov","+0.5 day","Closed","neu"],
+ ["CR-9","Payroll: add overtime column","Change","S-4","Email · 14 Nov","+1 day","Approved","acc"],
+ ["CR-10","Move export button to top","Change","S-5","Call · 16 Nov","+0.5 day","Waiting client approval","warn"],
+ ["CR-11","Shift roster module","New scope","S-6 (new)","Meeting 6 · 19 Nov","+4 days","Approved","acc"],
+ ["CR-12","Undo CR-9 overtime column","Revert of CR-9","S-4","WhatsApp · 19 Nov","+1 day","Raised","bad"]];
+const meetings=[
+ ["Meeting 6","19 Nov","Batch 2: 6 verified, 1 failed, 2 not checked, 1 not done","Client owes remaining Reports points (since M4)","warn","Awaiting client confirm"],
+ ["Meeting 5","12 Nov","Batch 1: 8 verified, 0 failed","4 new points, 2 extended","ok","Confirmed by client"],
+ ["Meeting 4","5 Nov","Batch 1 committed: 10 points","Client to share Reports points","neu","Confirmed by client"]];
+const feed=[
+ ["19 Nov 16:20","CR-12 raised by client (WhatsApp) – reverts CR-9","bad"],
+ ["19 Nov 15:00","Meeting 6 MOM published – sent by email + WhatsApp","acc"],
+ ["19 Nov 14:10","Timeline: Payroll 14 Dec → 16 Dec · reason CR-11 approved","warn"],
+ ["18 Nov 18:30","Meena logged 6 hrs on S-2 Attendance · 40%","neu"],
+ ["18 Nov 11:05","Bug-14 reopened by tester – late-mark calc wrong","bad"],
+ ["17 Nov 10:00","Proposal v1.2 uploaded (signed)","neu"]];
+const team=[
+ ["Arun","Team lead","Retail ERP, Logistics portal",38,14,"warn"],
+ ["Meena","Developer","Retail ERP",42,6,"bad"],
+ ["Karthik","Developer","Retail ERP, School website",34,4,"ok"],
+ ["Ravi","Developer","Retail ERP, Clinic app",30,5,"ok"],
+ ["Sowmya","Designer","School website, Clinic app",28,3,"ok"],
+ ["Lakshmi","Tester","Logistics portal, Retail ERP",36,9,"warn"]];
+const rework=[
+ ["Retail ERP","Acme Retail",320,48,22,16,3,2],
+ ["Logistics portal","FastMove",410,36,30,20,2,4],
+ ["Clinic booking app","CarePlus",260,12,10,0,0,1],
+ ["School website","Greenfield School",60,4,2,0,0,0]];
+let projTab="timeline";
+let tlView="chart";
+const SEC_COL=["#6366f1","#0ea5e9","#10b981","#f59e0b","#ec4899","#8b5cf6"];
+const dt=o=>{const d=new Date(2026,11,1);d.setDate(d.getDate()+o);return d};
+const fmt=d=>d.toLocaleDateString("en-GB",{day:"numeric",month:"short"});
+const curDur=s=>s.bs===null?s.cd:s.cd+s.cr;
+function timelineV(){
+const bEnd=Math.max(...sections.filter(s=>s.bs!==null).map(s=>s.bs+s.bd))-1, cEnd=Math.max(...sections.map(s=>s.cs+curDur(s)))-1;
+const head=`<div class="toolbar"><div><h2 style="margin:0">Phase 1 – Employees module</h2><div class="small" style="margin-top:4px">Planned finish <b>${fmt(dt(bEnd))}</b> · now <b style="color:var(--amber)">${fmt(dt(cEnd))}</b> (+${cEnd-bEnd} days, all from CRs)</div></div>
+<div><button class="btn ${tlView==="list"?"p":""}" onclick="tlView='list';render()">List</button> <button class="btn ${tlView==="chart"?"p":""}" onclick="tlView='chart';render()">Timeline</button></div></div>`;
+if(tlView==="list"){return `<div class="card">${head}<table><tr><th>Section</th><th>Owner</th><th>Start</th><th>Finish</th><th>Days</th><th>Changed by</th><th style="width:16%">Progress</th></tr>
+${sections.map((s,i)=>{const st=dt(s.cs),en=dt(s.cs+curDur(s)-1),late=s.bs===null?0:(s.cs+curDur(s))-(s.bs+s.bd);
+return `<tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:${SEC_COL[i]};margin-right:6px"></span><b>${s.id}</b> ${s.name}</td><td>${s.owner}</td><td>${fmt(st)}</td><td><b>${fmt(en)}</b>${late>0?`<div class="small" style="color:var(--amber)">was ${fmt(dt(s.bs+s.bd-1))}</div>`:""}</td><td>${curDur(s)}${s.cr&&s.bs!==null?`<span class="small"> (${s.bd}+${s.cr})</span>`:""}</td><td>${s.crs?pill(s.bs===null?"acc":"warn",s.crs):`<span class="small">No change</span>`}</td><td><div class="bar"><span style="width:${s.p}%;background:${s.p===100?'var(--green)':'var(--accent)'}"></span></div><div class="small">${s.p===100?"Done":s.p?s.p+"%":"Not started"}</div></td></tr>`}).join("")}
+</table><p class="small" style="margin:12px 0 0">Every date change is logged with who, when and which CR. Switch to Timeline to see it on a date scale.</p></div>`}
+const R0=-16,R1=70,PX=11,W=(R1-R0)*PX,X=o=>(o-R0)*PX;
+const today=Math.round((new Date(2026,10,19)-new Date(2026,11,1))/864e5);
+let mon="",wk="",grid="";
+for(let o=R0;o<R1;o++){const d=dt(o);
+ if(d.getDate()===1||o===R0){const last=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();const len=Math.min(last-d.getDate()+1,R1-o);
+  mon+=`<div style="position:absolute;left:${X(o)}px;width:${len*PX}px;border-left:1px solid var(--line);padding:4px 6px;font-weight:600;font-size:12px;letter-spacing:.04em">${d.toLocaleDateString("en-GB",{month:"short"}).toUpperCase()} ${d.getFullYear()}</div>`}
+ if(d.getDay()===1){wk+=`<div style="position:absolute;left:${X(o)}px;padding:3px 4px;font-size:11px;color:var(--muted);border-left:1px solid var(--line)">${d.getDate()}</div>`;
+  grid+=`<div style="position:absolute;top:0;bottom:0;left:${X(o)}px;border-left:1px solid #eef0f3"></div>`}}
+const rows=sections.map((s,i)=>{const col=SEC_COL[i],cd=curDur(s),plain=s.bs===null?0:s.cd;
+ const base=s.bs===null?"":`<div title="Original plan" style="position:absolute;top:8px;height:6px;left:${X(s.bs)}px;width:${s.bd*PX}px;background:#d1d5db;border-radius:3px"></div>`;
+ const main=plain?`<div style="position:absolute;top:17px;height:22px;left:${X(s.cs)}px;width:${plain*PX}px;background:${col};border-radius:5px 0 0 5px;${s.cr?"":"border-radius:5px;"}color:#fff;font-size:11px;line-height:22px;padding:0 6px;white-space:nowrap;overflow:hidden">${fmt(dt(s.cs))} – ${fmt(dt(s.cs+plain-1))}</div>`:"";
+ const crW=s.bs===null?cd:s.cr;
+ const cr=crW?`<div title="${s.crs}" style="position:absolute;top:17px;height:22px;left:${X(s.cs+plain)}px;width:${crW*PX}px;background:repeating-linear-gradient(45deg,#f59e0b,#f59e0b 4px,#fbbf24 4px,#fbbf24 8px);border-radius:${plain?"0 5px 5px 0":"5px"};color:#422006;font-size:11px;line-height:22px;padding:0 4px;white-space:nowrap">+${crW}d</div>`:"";
+ const lbl=`<div style="position:absolute;top:21px;left:${X(s.cs+cd)+8}px;font-size:11px;color:var(--muted);white-space:nowrap">${s.crs?s.crs:""}</div>`;
+ return `<div style="position:relative;height:46px;border-bottom:1px solid var(--line)">${base}${main}${cr}${lbl}</div>`}).join("");
+const names=sections.map((s,i)=>`<div style="height:46px;border-bottom:1px solid var(--line);padding:6px 10px 0 0;display:flex;gap:8px"><span style="width:4px;height:30px;border-radius:2px;background:${SEC_COL[i]};flex-shrink:0"></span><div><b>${s.id}</b> ${s.name}<div class="small">${s.owner} · ${s.p===100?"Done":s.p?s.p+"%":"Not started"}</div></div></div>`).join("");
+const tl=`<div style="position:absolute;top:0;bottom:0;left:${X(today)}px;border-left:2px solid #4f46e5;z-index:2"><span style="position:absolute;top:-1px;left:3px;background:#4f46e5;color:#fff;font-size:10px;padding:1px 5px;border-radius:3px">Today</span></div>`;
+const fin=`<div style="position:absolute;top:0;bottom:0;left:${X(bEnd+1)}px;border-left:2px dashed #9ca3af;z-index:1"></div><div style="position:absolute;top:0;bottom:0;left:${X(cEnd+1)}px;border-left:2px dashed #f59e0b;z-index:1"></div>`;
+return `<div class="card">${head}<div class="legend" style="margin:0 0 12px"><span><i style="background:#d1d5db"></i>Original plan</span><span><i style="background:#6366f1"></i>Current plan</span><span><i style="background:#f59e0b"></i>Extra days from CR</span><span><i style="background:#4f46e5;width:3px"></i>Today</span><span><i style="border:1px dashed #9ca3af;background:#fff"></i>Planned finish</span><span><i style="border:1px dashed #f59e0b;background:#fff"></i>New finish</span></div>
+<div style="display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden">
+<div style="width:230px;flex-shrink:0;padding-left:12px;border-right:1px solid var(--line);background:#fff"><div style="height:46px;border-bottom:1px solid var(--line);display:flex;align-items:flex-end;padding-bottom:6px" class="small">Section</div>${names}</div>
+<div style="overflow-x:auto;flex:1" id="tlscroll"><div style="width:${W}px;position:relative">
+<div style="position:relative;height:24px;border-bottom:1px solid var(--line);background:#fafafa">${mon}</div>
+<div style="position:relative;height:22px;border-bottom:1px solid var(--line);background:#fafafa">${wk}</div>
+<div style="position:relative">${grid}${fin}${tl}${rows}</div></div></div></div>
+<p class="small" style="margin:12px 0 0">Scroll sideways to move through the months. Hover a bar to see its CR.</p></div>`}
+
+const pill=(c,t)=>`<span class="pill ${c}">${t}</span>`;
+function nav(cur){document.getElementById("nav").innerHTML=NAV.map(([k,l])=>`<a href="#${k}" class="${cur===k||(cur==="project"&&k==="projects")?"active":""}">${l}</a>`).join("")}
+function dashboard(){return `<h1>Dashboard</h1><p class="sub">All projects at a glance · week of 17 Nov 2026</p>
+<div class="grid k6">
+${[["Active projects","4",""],["Open CRs","14","+5 this week","warn"],["Reverts this month","5","2 projects","bad"],["Rework hours","62 hrs","of 1,100 logged",""],["Delayed milestones","3","Retail ERP, Logistics","bad"],["Waiting on client","6","2 overdue","warn"]].map(k=>`<div class="card kpi"><div class="l">${k[0]}</div><div class="n">${k[1]}</div><div class="d ${k[3]?'':''}" style="color:${k[3]==='bad'?'var(--red)':k[3]==='warn'?'var(--amber)':'var(--muted)'}">${k[2]}</div></div>`).join("")}
+</div>
+<div class="row2"><div class="card"><h2>Project health</h2><table><tr><th>Project</th><th>Phase</th><th>Progress</th><th>Health</th><th>Open CRs</th><th>Reverts</th></tr>
+${projects.map(p=>`<tr class="click" onclick="location.hash='project'"><td><b>${p.name}</b><div class="small">${p.client} · TL ${p.tl}</div></td><td>${p.phase}</td><td style="min-width:110px"><div class="bar"><span style="width:${p.progress}%"></span></div><div class="small">${p.progress}%</div></td><td>${pill(p.health,p.healthT)}</td><td>${p.openCR}</td><td>${p.reverts}</td></tr>`).join("")}
+</table></div>
+<div class="card"><h2>Needs attention</h2><div class="feed">
+<div>${pill("bad","Stuck")} <b>Logistics #9</b> carried 4 meetings<div class="small">Waiting on client</div></div>
+<div>${pill("warn","Extended 2×")} <b>Retail ERP #14</b> Payroll layout<div class="small">Waiting on team</div></div>
+<div>${pill("bad","Revert")} <b>CR-12</b> undoes CR-9<div class="small">Retail ERP · raised today</div></div>
+<div>${pill("warn","Client owes")} Reports points list<div class="small">Promised Meeting 4 · 2 weeks overdue</div></div>
+<div>${pill("warn","MOM")} Meeting 6 not confirmed<div class="small">Retail ERP · 0 of 48 hrs passed</div></div>
+</div></div></div>`}
+function projectsV(){return `<div class="toolbar"><div><h1>Projects</h1><p class="sub" style="margin:0">4 active · 0 on hold</p></div><button class="btn p">+ New project</button></div>
+<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+${projects.map(p=>`<div class="card" style="cursor:pointer" onclick="location.hash='project'"><div style="display:flex;justify-content:space-between"><b>${p.name}</b>${pill(p.health,p.healthT)}</div><div class="small" style="margin:4px 0 12px">${p.client} · TL ${p.tl}</div><div class="small">${p.phase}</div><div class="bar" style="margin:6px 0 12px"><span style="width:${p.progress}%"></span></div><div class="small">Go-live: ${p.golive}</div><div class="small" style="margin-top:6px">Open CRs ${p.openCR} · Reverts ${p.reverts} · Client pending ${p.pending}</div></div>`).join("")}
+</div>`}
+function projectV(){const T=[["timeline","Timeline"],["crs","Change requests"],["meetings","Meetings"],["activity","Activity log"]];
+let body="";
+if(projTab==="timeline")body=timelineV();
+if(projTab==="crs")body=`<div class="card"><div class="toolbar"><h2 style="margin:0">Change requests · numbered per project, never deleted</h2><button class="btn p">+ Raise CR</button></div><table><tr><th>No.</th><th>Title</th><th>Type</th><th>Section</th><th>Source</th><th>Impact</th><th>Status</th></tr>${crs.map(c=>`<tr><td><b>${c[0]}</b></td><td>${c[1]}</td><td>${c[2].startsWith("Revert")?pill("bad",c[2]):c[2]}</td><td>${c[3]}</td><td class="small">${c[4]}</td><td>${c[5]}</td><td>${pill(c[7],c[6])}</td></tr>`).join("")}</table></div>`;
+if(projTab==="meetings")body=`<div class="card"><h2>Weekly meetings</h2><table><tr><th>Meeting</th><th>Date</th><th>Batch result</th><th>Carry-over / notes</th><th>MOM</th></tr>${meetings.map(m=>`<tr><td><b>${m[0]}</b></td><td>${m[1]}</td><td>${m[2]}</td><td class="small">${m[3]}</td><td>${pill(m[4],m[5])}</td></tr>`).join("")}</table>
+<h2 style="margin-top:20px">Open points trend</h2><div style="display:flex;align-items:flex-end;gap:16px;height:110px">${[[4,"M1"],[6,"M2"],[9,"M3"],[10,"M4"],[7,"M5"],[8,"M6"]].map(([v,l])=>`<div style="text-align:center;flex:1"><div style="height:${v*9}px;background:${v>8?'#f59e0b':'var(--accent)'};border-radius:4px 4px 0 0"></div><div class="small">${l} · ${v}</div></div>`).join("")}</div></div>`;
+if(projTab==="activity")body=`<div class="card"><h2>Everything that happened, newest first</h2><div class="feed">${feed.map(f=>`<div><span class="small">${f[0]}</span> &nbsp;${pill(f[2],"●")} ${f[1]}</div>`).join("")}</div></div>`;
+return `<p class="small" style="margin:0 0 6px"><a href="#projects">Projects</a> / Retail ERP</p><div class="toolbar"><div><h1>Retail ERP</h1><p class="sub" style="margin:0">Acme Retail · TL Arun · Team: Meena, Karthik, Ravi, Lakshmi</p></div>${pill("warn","3 days behind")}</div>
+<div class="grid k6" style="margin-bottom:16px">${[["Progress","62%"],["CRs total","12"],["Reverts","3"],["Rework hrs","16"],["Client pending","2"]].map(k=>`<div class="card kpi"><div class="l">${k[0]}</div><div class="n">${k[1]}</div></div>`).join("")}</div>
+<div class="tabs">${T.map(([k,l])=>`<button class="${projTab===k?"on":""}" onclick="projTab='${k}';render()">${l}</button>`).join("")}</div>${body}`}
+function reworkV(){const c={p:"#4f46e5",cr:"#f59e0b",b:"#ef4444",r:"#7c2d12"};return `<h1>Rework report</h1><p class="sub">Where team time went · Nov 2026 · for HR and management</p>
+<div class="note">Reverts and "requirement changed" reopens are counted as client rework. Reopens tagged "bug" are counted as team rework.</div>
+<div class="card"><table><tr><th>Project</th><th>Client</th><th style="width:34%">Hours split</th><th>Planned</th><th>CR</th><th>Bug fix</th><th>Revert</th><th>Client reverts</th><th>Team bugs reopened</th></tr>
+${rework.map(r=>{const t=r[2]+r[3]+r[4]+r[5];return `<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td><div class="stack">${[[r[2],c.p],[r[3],c.cr],[r[4],c.b],[r[5],c.r]].map(([v,col])=>`<span style="width:${v/t*100}%;background:${col}"></span>`).join("")}</div></td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td><td>${r[7]}</td></tr>`}).join("")}
+</table><div class="legend"><span><i style="background:${c.p}"></i>Planned work</span><span><i style="background:${c.cr}"></i>CR work</span><span><i style="background:${c.b}"></i>Bug fixing</span><span><i style="background:${c.r}"></i>Revert / rework</span></div></div>
+<div class="row2"><div class="card"><h2>Client response time</h2><table><tr><th>Client</th><th>Avg. CR approval</th><th>Avg. verification</th><th>MOM confirm</th></tr><tr><td>Acme Retail</td><td>3.2 days</td><td>1.5 meetings</td><td>${pill("warn","62% on time")}</td></tr><tr><td>FastMove</td><td>5.8 days</td><td>2.4 meetings</td><td>${pill("bad","40% on time")}</td></tr><tr><td>CarePlus</td><td>1.1 days</td><td>1 meeting</td><td>${pill("ok","100% on time")}</td></tr></table></div>
+<div class="card"><h2>Export</h2><p class="small">Monthly rework summary per client, with CR numbers and source evidence.</p><button class="btn">Excel</button> <button class="btn">PDF</button></div></div>`}
+function teamV(){return `<h1>Team & workload</h1><p class="sub">Hours logged this week and open items per person</p><div class="card"><table><tr><th>Name</th><th>Role</th><th>Projects</th><th style="width:22%">Hours this week (of 40)</th><th>Open items</th><th>Load</th></tr>
+${team.map(t=>`<tr><td><b>${t[0]}</b></td><td>${t[1]}</td><td class="small">${t[2]}</td><td><div class="bar"><span style="width:${Math.min(t[3]/40*100,100)}%;background:${t[3]>40?'var(--red)':'var(--accent)'}"></span></div><div class="small">${t[3]} hrs</div></td><td>${t[4]}</td><td>${pill(t[5],t[5]==="bad"?"Overloaded":t[5]==="warn"?"High":"Normal")}</td></tr>`).join("")}
+</table></div>`}
+function calendarV(){const ev={3:[["Retail ERP weekly","acc"]],5:[["Logistics weekly","acc"]],10:[["Retail ERP weekly","acc"],["Clinic: Payments demo","warn"]],12:[["Logistics weekly","acc"]],14:[["Karthik leave","neu"]],17:[["Retail ERP weekly","acc"]],19:[["Logistics weekly","acc"],["Retail: Meeting 6","acc"]],20:[["Logistics go-live (baseline)","bad"]],24:[["Retail ERP weekly","acc"]],26:[["School: design review","warn"]],30:[["Logistics go-live (current)","bad"]]};
+let cells=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(d=>`<div class="h">${d}</div>`).join("");
+cells+=`<div class="o">26</div><div class="o">27</div><div class="o">28</div><div class="o">29</div><div class="o">30</div><div class="o">31</div>`;
+for(let d=1;d<=30;d++)cells+=`<div><b>${d}</b>${(ev[d]||[]).map(e=>`<span class="ev pill ${e[1]}">${e[0]}</span>`).join("")}</div>`;
+cells+=`<div class="o">1</div><div class="o">2</div><div class="o">3</div><div class="o">4</div><div class="o">5</div><div class="o">6</div>`;
+return `<div class="toolbar"><div><h1>Calendar</h1><p class="sub" style="margin:0">November 2026 · all projects · leave visible to HR only</p></div><div><select><option>All projects</option><option>Retail ERP</option></select> <button class="btn p">+ Event</button></div></div><div class="cal">${cells}</div>
+<div class="legend"><span><i style="background:var(--accent-bg)"></i>Meetings</span><span><i style="background:var(--amber-bg)"></i>Demos / reviews</span><span><i style="background:var(--red-bg)"></i>Milestones</span><span><i style="background:var(--gray-bg)"></i>Leave</span></div>`}
+function usersV(){const users=[["Arun","Team lead","Retail ERP, Logistics","Active"],["Meena","Developer","Retail ERP","Active"],["Lakshmi","Tester","Logistics, Retail ERP","Active"],["Sowmya","Designer","School, Clinic","Active"],["Mr. Rao","Client – approver","Retail ERP","Active"],["Ms. Iyer","Client – viewer","Retail ERP","Invited"]];
+const perms=["See projects","Raise CR / point","Approve CR","Set batch & assign","Mark point done","Log / reopen bugs","Verify & close point","Run meeting, publish MOM","See internal notes","Rework reports"];
+const roles=["Client","TL","Dev/Design","Tester","HR"];
+const m=[[1,1,1,1,1],[1,1,0,0,0],[1,0,0,0,0],[0,1,0,0,0],[0,1,1,0,0],[1,1,0,1,0],[1,0,0,0,0],[0,1,0,0,0],[0,1,1,1,1],[0,1,0,0,1]];
+return `<div class="toolbar"><div><h1>Users & roles</h1><p class="sub" style="margin:0">Admin/HR creates users and assigns them to projects</p></div><button class="btn p">+ Invite user</button></div>
+<div class="row2" style="margin-top:0"><div class="card"><h2>Users</h2><table><tr><th>Name</th><th>Role</th><th>Projects</th><th>Status</th></tr>${users.map(u=>`<tr><td><b>${u[0]}</b></td><td>${u[1].startsWith("Client")?pill("warn",u[1]):u[1]}</td><td class="small">${u[2]}</td><td>${pill(u[3]==="Active"?"ok":"neu",u[3])}</td></tr>`).join("")}</table></div>
+<div class="card"><h2>Rules</h2><p class="small">Clients only see their own project and client-visible entries.</p><p class="small">A project can have several client users: approver or viewer.</p><p class="small">Removed users are deactivated, never deleted, so their history stays.</p></div></div>
+<div class="card" style="margin-top:14px"><h2>Role permissions</h2><table><tr><th>Permission</th>${roles.map(r=>`<th class="chk">${r}</th>`).join("")}</tr>${perms.map((p,i)=>`<tr><td>${p}</td>${m[i].map(v=>`<td class="chk"><input type="checkbox" ${v?"checked":""}></td>`).join("")}</tr>`).join("")}</table></div>`}
+function render(){const h=(location.hash||"#dashboard").slice(1);nav(h);const V={dashboard,projects:projectsV,project:projectV,rework:reworkV,team:teamV,calendar:calendarV,users:usersV};document.getElementById("view").innerHTML=(V[h]||dashboard)();}
+addEventListener("hashchange",()=>{window.scrollTo(0,0);render()});render();
+</script>
+</body>
+</html>

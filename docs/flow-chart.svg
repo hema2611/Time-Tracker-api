@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="1830" viewBox="0 0 680 1830" role="img" font-family="Segoe UI, Arial, sans-serif">
+<title>Project Tracker: complete flow by role</title>
+<defs><marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#73726c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<rect width="680" height="1830" fill="#ffffff"/>
+<rect x="36" y="64" width="120" height="1666" rx="8" fill="none" stroke="#cbd5e1" stroke-width="0.8" stroke-dasharray="4 4"/>
+<text x="96" y="48" text-anchor="middle" font-size="14" font-weight="600" fill="#1e293b">Admin</text>
+<rect x="158" y="64" width="120" height="1666" rx="8" fill="none" stroke="#cbd5e1" stroke-width="0.8" stroke-dasharray="4 4"/>
+<text x="218" y="48" text-anchor="middle" font-size="14" font-weight="600" fill="#1e293b">Team lead</text>
+<rect x="280" y="64" width="120" height="1666" rx="8" fill="none" stroke="#cbd5e1" stroke-width="0.8" stroke-dasharray="4 4"/>
+<text x="340" y="48" text-anchor="middle" font-size="14" font-weight="600" fill="#1e293b">Developer</text>
+<rect x="402" y="64" width="120" height="1666" rx="8" fill="none" stroke="#cbd5e1" stroke-width="0.8" stroke-dasharray="4 4"/>
+<text x="462" y="48" text-anchor="middle" font-size="14" font-weight="600" fill="#1e293b">Tester</text>
+<rect x="524" y="64" width="120" height="1666" rx="8" fill="none" stroke="#cbd5e1" stroke-width="0.8" stroke-dasharray="4 4"/>
+<text x="584" y="48" text-anchor="middle" font-size="14" font-weight="600" fill="#1e293b">Client</text>
+<line x1="96" y1="124" x2="96" y2="142" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<line x1="340" y1="572" x2="340" y2="910" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<line x1="196" y1="764" x2="196" y2="846" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<line x1="340" y1="956" x2="340" y2="974" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<line x1="462" y1="1084" x2="462" y2="1102" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<line x1="218" y1="1212" x2="218" y2="1230" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<line x1="584" y1="1276" x2="584" y2="1294" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<line x1="584" y1="1340" x2="584" y2="1358" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<line x1="218" y1="1468" x2="218" y2="1486" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<path d="M96 188 L96 198 L218 198 L218 206" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<path d="M218 252 L218 262 L584 262 L584 270" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<path d="M584 316 L584 326 L218 326 L218 334" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<path d="M218 380 L218 390 L340 390 L340 398" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<path d="M396 422 L401 422 L401 998 L398 998" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<path d="M584 508 L584 518 L340 518 L340 526" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<path d="M284 550 L218 550 L218 590" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<path d="M218 636 L218 646 L584 646 L584 654" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<path d="M584 700 L584 710 L218 710 L218 718" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<path d="M218 764 L218 774 L584 774 L584 782" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<path d="M584 828 L584 838 L240 838 L240 846" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<path d="M218 892 L218 902 L320 902 L320 910" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<path d="M340 1020 L340 1030 L462 1030 L462 1038" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<path d="M406 1062 L370 1062 L370 1102" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<path d="M284 1126 L270 1126 L270 998 L282 998" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<path d="M462 1148 L462 1158 L218 1158 L218 1166" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<path d="M274 1190 L584 1190 L584 1230" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<path d="M274 1254 L352 1254 L352 1150" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<path d="M584 1404 L584 1414 L218 1414 L218 1422" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<path d="M218 1532 L218 1542 L340 1542 L340 1550" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<path d="M340 1596 L340 1606 L218 1606 L218 1614" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<path d="M218 1660 L218 1670 L96 1670 L96 1678" stroke="#73726c" stroke-width="1.2" fill="none" marker-end="url(#a)"/>
+<text x="226" y="572" text-anchor="start" dominant-baseline="central" font-size="12" fill="#64748b">big</text>
+<text x="348" y="750" text-anchor="start" dominant-baseline="central" font-size="12" fill="#64748b">small</text>
+<text x="470" y="764" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#64748b">big shift</text>
+<text x="470" y="1094" text-anchor="start" dominant-baseline="central" font-size="12" fill="#64748b">pass</text>
+<text x="388" y="1052" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#64748b">fail</text>
+<text x="462" y="1222" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#64748b">repeats weekly</text>
+<text x="218" y="1290" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#64748b">changes to Raise CR</text>
+<text x="358" y="1200" text-anchor="start" dominant-baseline="central" font-size="12" fill="#64748b">bugs</text>
+<text x="462" y="1318" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#64748b">issues: test loop</text>
+<text x="218" y="1062" text-anchor="middle" dominant-baseline="central" font-size="12" fill="#64748b">sections and CRs</text>
+<rect x="40" y="80" width="112" height="44" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.8"/>
+<text x="96" y="102.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#085041">Add users</text>
+<rect x="103" y="71" width="46" height="16" rx="8" fill="#E6F1FB" stroke="#0C447C" stroke-width="0.6"/>
+<text x="126.0" y="79" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#0C447C">Mail</text>
+<rect x="40" y="144" width="112" height="44" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.8"/>
+<text x="96" y="166.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#085041">New project</text>
+<rect x="117" y="135" width="32" height="16" rx="8" fill="#FAEEDA" stroke="#633806" stroke-width="0.6"/>
+<text x="133.0" y="143" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#633806">AI</text>
+<rect x="162" y="208" width="112" height="44" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.8"/>
+<text x="218" y="230.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#085041">Plan timeline</text>
+<rect x="239" y="199" width="32" height="16" rx="8" fill="#FAEEDA" stroke="#633806" stroke-width="0.6"/>
+<text x="255.0" y="207" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#633806">AI</text>
+<rect x="528" y="272" width="112" height="44" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="584" y="294.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#3C3489">Approve plan</text>
+<rect x="591" y="263" width="46" height="16" rx="8" fill="#E6F1FB" stroke="#0C447C" stroke-width="0.6"/>
+<text x="614.0" y="271" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#0C447C">Mail</text>
+<rect x="162" y="336" width="112" height="44" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="218" y="358.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#3C3489">Assign work</text>
+<rect x="225" y="327" width="46" height="16" rx="8" fill="#E6F1FB" stroke="#0C447C" stroke-width="0.6"/>
+<text x="248.0" y="335" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#0C447C">Mail</text>
+<rect x="284" y="400" width="112" height="44" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="340" y="422.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#3C3489">Build section</text>
+<rect x="528" y="464" width="112" height="44" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="584" y="486.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#3C3489">Client asks</text>
+<rect x="284" y="528" width="112" height="44" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.8"/>
+<text x="340" y="550.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#085041">Raise CR</text>
+<rect x="361" y="519" width="32" height="16" rx="8" fill="#FAEEDA" stroke="#633806" stroke-width="0.6"/>
+<text x="377.0" y="527" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#633806">AI</text>
+<rect x="162" y="592" width="112" height="44" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="218" y="614.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#3C3489">Review CR</text>
+<rect x="225" y="583" width="46" height="16" rx="8" fill="#E6F1FB" stroke="#0C447C" stroke-width="0.6"/>
+<text x="248.0" y="591" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#0C447C">Mail</text>
+<rect x="190" y="583" width="32" height="16" rx="8" fill="#FAEEDA" stroke="#633806" stroke-width="0.6"/>
+<text x="206.0" y="591" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#633806">AI</text>
+<rect x="528" y="656" width="112" height="44" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="584" y="678.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#3C3489">Approve CR</text>
+<rect x="591" y="647" width="46" height="16" rx="8" fill="#E6F1FB" stroke="#0C447C" stroke-width="0.6"/>
+<text x="614.0" y="655" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#0C447C">Mail</text>
+<rect x="162" y="720" width="112" height="44" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="218" y="742.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#3C3489">Update plan</text>
+<rect x="528" y="784" width="112" height="44" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.8"/>
+<text x="584" y="806.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#444441">New baseline</text>
+<rect x="591" y="775" width="46" height="16" rx="8" fill="#E6F1FB" stroke="#0C447C" stroke-width="0.6"/>
+<text x="614.0" y="783" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#0C447C">Mail</text>
+<rect x="162" y="848" width="112" height="44" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="218" y="870.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#3C3489">Assign CR</text>
+<rect x="225" y="839" width="46" height="16" rx="8" fill="#E6F1FB" stroke="#0C447C" stroke-width="0.6"/>
+<text x="248.0" y="847" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#0C447C">Mail</text>
+<rect x="284" y="912" width="112" height="44" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="340" y="934.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#3C3489">Start CR</text>
+<rect x="284" y="976" width="112" height="44" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="340" y="998.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#3C3489">Mark done</text>
+<rect x="347" y="967" width="46" height="16" rx="8" fill="#E6F1FB" stroke="#0C447C" stroke-width="0.6"/>
+<text x="370.0" y="975" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#0C447C">Mail</text>
+<rect x="406" y="1040" width="112" height="44" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="462" y="1062.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#3C3489">Test, verify</text>
+<rect x="406" y="1104" width="112" height="44" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="462" y="1126.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#3C3489">Close</text>
+<rect x="284" y="1104" width="112" height="44" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="0.8"/>
+<text x="340" y="1126.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#712B13">Fix, reopen</text>
+<rect x="347" y="1095" width="46" height="16" rx="8" fill="#E6F1FB" stroke="#0C447C" stroke-width="0.6"/>
+<text x="370.0" y="1103" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#0C447C">Mail</text>
+<rect x="312" y="1095" width="32" height="16" rx="8" fill="#FAEEDA" stroke="#633806" stroke-width="0.6"/>
+<text x="328.0" y="1103" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#633806">AI</text>
+<rect x="162" y="1168" width="112" height="44" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="218" y="1190.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#3C3489">Weekly meet</text>
+<rect x="225" y="1159" width="46" height="16" rx="8" fill="#E6F1FB" stroke="#0C447C" stroke-width="0.6"/>
+<text x="248.0" y="1167" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#0C447C">Mail</text>
+<rect x="190" y="1159" width="32" height="16" rx="8" fill="#FAEEDA" stroke="#633806" stroke-width="0.6"/>
+<text x="206.0" y="1167" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#633806">AI</text>
+<rect x="162" y="1232" width="112" height="44" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="0.8"/>
+<text x="218" y="1254.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#712B13">Log new items</text>
+<rect x="528" y="1232" width="112" height="44" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="584" y="1254.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#3C3489">Confirm notes</text>
+<rect x="591" y="1223" width="46" height="16" rx="8" fill="#E6F1FB" stroke="#0C447C" stroke-width="0.6"/>
+<text x="614.0" y="1231" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#0C447C">Mail</text>
+<rect x="528" y="1296" width="112" height="44" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="584" y="1318.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#3C3489">UAT</text>
+<rect x="591" y="1287" width="46" height="16" rx="8" fill="#E6F1FB" stroke="#0C447C" stroke-width="0.6"/>
+<text x="614.0" y="1295" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#0C447C">Mail</text>
+<rect x="528" y="1360" width="112" height="44" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="584" y="1382.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#3C3489">Sign-off</text>
+<rect x="591" y="1351" width="46" height="16" rx="8" fill="#E6F1FB" stroke="#0C447C" stroke-width="0.6"/>
+<text x="614.0" y="1359" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#0C447C">Mail</text>
+<rect x="162" y="1424" width="112" height="44" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="218" y="1446.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#3C3489">Go-live</text>
+<rect x="225" y="1415" width="46" height="16" rx="8" fill="#E6F1FB" stroke="#0C447C" stroke-width="0.6"/>
+<text x="248.0" y="1423" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#0C447C">Mail</text>
+<rect x="162" y="1488" width="112" height="44" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="218" y="1510.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#3C3489">Handover</text>
+<rect x="284" y="1552" width="112" height="44" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="340" y="1574.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#3C3489">Support fixes</text>
+<rect x="162" y="1616" width="112" height="44" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="218" y="1638.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#3C3489">Close project</text>
+<rect x="225" y="1607" width="46" height="16" rx="8" fill="#E6F1FB" stroke="#0C447C" stroke-width="0.6"/>
+<text x="248.0" y="1615" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#0C447C">Mail</text>
+<rect x="40" y="1680" width="112" height="44" rx="8" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.8"/>
+<text x="96" y="1702.0" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="600" fill="#444441">Final reports</text>
+<rect x="117" y="1671" width="32" height="16" rx="8" fill="#FAEEDA" stroke="#633806" stroke-width="0.6"/>
+<text x="133.0" y="1679" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#633806">AI</text>
+<rect x="40" y="1756" width="14" height="14" rx="3" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.8"/><text x="60" y="1763" dominant-baseline="central" font-size="12" fill="#334155">Built</text>
+<rect x="105" y="1756" width="14" height="14" rx="3" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/><text x="125" y="1763" dominant-baseline="central" font-size="12" fill="#334155">Planned</text>
+<rect x="184" y="1756" width="14" height="14" rx="3" fill="#FAECE7" stroke="#993C1D" stroke-width="0.8"/><text x="204" y="1763" dominant-baseline="central" font-size="12" fill="#334155">Loops back</text>
+<rect x="284" y="1756" width="14" height="14" rx="3" fill="#F1EFE8" stroke="#5F5E5A" stroke-width="0.8"/><text x="304" y="1763" dominant-baseline="central" font-size="12" fill="#334155">When needed / sample</text>
+<rect x="40" y="1790" width="32" height="16" rx="8" fill="#FAEEDA" stroke="#633806" stroke-width="0.6"/><text x="56.0" y="1798" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#633806">AI</text><text x="78" y="1798" dominant-baseline="central" font-size="12" fill="#334155">AI helps here</text>
+<rect x="179" y="1790" width="46" height="16" rx="8" fill="#E6F1FB" stroke="#0C447C" stroke-width="0.6"/><text x="202.0" y="1798" text-anchor="middle" dominant-baseline="central" font-size="11" font-weight="600" fill="#0C447C">Mail</text><text x="231" y="1798" dominant-baseline="central" font-size="12" fill="#334155">Backend email or notification</text>
+</svg>
