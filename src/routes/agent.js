@@ -102,11 +102,15 @@ r.post('/events', requireDevice, async (req, res) => {
   // Clocks can be off a little; anything far in the future is refused, not trusted.
   const latest = Date.now() + 5 * 60 * 1000
   const rows = events.filter(e => new Date(e.at).getTime() <= latest)
-  for (const e of rows) {
+  // One multi-row insert: the database is remote, and one round trip per event made a big
+  // backlog take longer than the agent waits, so it kept resending the same batch.
+  if (rows.length) {
+    const ip = (req.ip || '').slice(0, 45)
     await query(
-      'INSERT IGNORE INTO activity_events (device_id, user_id, type, occurred_at, received_at, ip, client_id, detail) VALUES (?, ?, ?, ?, UTC_TIMESTAMP(), ?, ?, ?)',
-      [req.device.id, req.device.user_id, e.type, new Date(e.at).toISOString().slice(0, 23).replace('T', ' '), (req.ip || '').slice(0, 45), e.id,
-        e.detail ? JSON.stringify(e.detail) : null])
+      'INSERT IGNORE INTO activity_events (device_id, user_id, type, occurred_at, received_at, ip, client_id, detail) VALUES ' +
+        rows.map(() => '(?, ?, ?, ?, UTC_TIMESTAMP(), ?, ?, ?)').join(', '),
+      rows.flatMap(e => [req.device.id, req.device.user_id, e.type, new Date(e.at).toISOString().slice(0, 23).replace('T', ' '), ip, e.id,
+        e.detail ? JSON.stringify(e.detail) : null]))
   }
   await query('UPDATE agent_devices SET last_seen_at = UTC_TIMESTAMP(), last_ip = ?, agent_version = COALESCE(?, agent_version) WHERE id = ?',
     [(req.ip || '').slice(0, 45), version ?? null, req.device.id])

@@ -25,7 +25,7 @@ r.get('/day', async (req, res) => {
   const [person] = await query("SELECT id, name, role FROM users WHERE id = ? AND role <> 'client'", [userId])
   if (!person) return res.status(404).json({ error: 'Person not found.' })
   const devices = await query(
-    'SELECT name, platform, last_seen_at AS lastSeen FROM agent_devices WHERE user_id = ? AND revoked_at IS NULL ORDER BY last_seen_at DESC', [userId])
+    'SELECT name, platform, agent_version AS version, last_seen_at AS lastSeen FROM agent_devices WHERE user_id = ? AND revoked_at IS NULL ORDER BY last_seen_at DESC', [userId])
   res.json({ date, today: today(), person, devices, day: await dayFor(userId, date) })
 })
 
@@ -44,7 +44,8 @@ r.get('/team', async (req, res) => {
       status: date === today() ? d.status : null, firstIn: d.firstIn, lastOut: d.lastOut, stillWorking: d.stillWorking,
       workMinutes: d.workMinutes, deskWorkMinutes: d.deskWorkMinutes, awayWorkMinutes: d.awayWorkMinutes, awayWork: d.awayWork,
       idleMinutes: d.idleMinutes, breakMinutes: d.breakMinutes, offlineMinutes: d.offlineMinutes, flags: d.flags,
-      unproductiveMinutes: d.unproductiveMinutes, unproductive: d.unproductive, location: d.location })
+      unproductiveMinutes: d.unproductiveMinutes, unproductive: d.unproductive, location: d.location,
+      claudeMinutes: d.claudeMinutes, officeDayMinutes: d.officeDayMinutes, extension: d.extension })
   }
   res.json({ date, today: today(), people: rows })
 })

@@ -169,7 +169,29 @@ export async function dayFor(userId, date) {
   const day = buildDay(events, { dayEnd: end })
   day.location = locationOf(events, day, await officeNetworks())
   day.flags = await dayFlags(userId, events, day, start, end)
+  Object.assign(day, agentDetails(events, day))
   return day
+}
+
+// What the desktop agent shows its user, so the web page matches it:
+// the 9-hour office day, time with Claude working, and whether the browser extension is reporting.
+const OFFICE_DAY_MINUTES = +(process.env.OFFICE_DAY_MINUTES || 9 * 60)
+function agentDetails(events, day) {
+  const beats = events.filter(e => e.type === 'heartbeat' && e.signals)
+  const inWork = t => day.pieces.some(p => p.kind !== 'idle' && p.kind !== 'break' && p.kind !== 'offline' && Date.parse(p.start) <= t && Date.parse(p.end) > t)
+  // One heartbeat a minute, so heartbeats with Claude working inside work time ≈ minutes.
+  const claudeMinutes = beats.filter(e => e.signals.ai && inWork(e.at)).length
+  const last = beats[beats.length - 1]
+  const recent = beats.filter(e => e.signals.browser).slice(-30)
+  const browser = !recent.length ? null
+    : recent.some(e => e.signals.ext) ? 'on' : recent.some(e => e.signals.browser === 'other') ? 'other' : 'off'
+  return {
+    officeDayMinutes: OFFICE_DAY_MINUTES,
+    remainingMinutes: Math.max(0, OFFICE_DAY_MINUTES - day.workMinutes),
+    claudeMinutes,
+    extension: browser, // 'on' | 'off' (browser used, extension silent) | 'other' (unsupported browser) | null (no browser seen)
+    lastSignalAt: last ? new Date(last.at).toISOString() : null,
+  }
 }
 
 // ---- Check-in / check-out location (only what was available: network, Wi-Fi name, exact place) ----
