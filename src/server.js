@@ -11,17 +11,26 @@ import proposalRoutes from './routes/proposals.js'
 import timelineRoutes from './routes/timelines.js'
 import assistantRoutes from './routes/assistant.js'
 import crRoutes from './routes/crs.js'
+import agentRoutes from './routes/agent.js'
+import attendanceRoutes from './routes/attendance.js'
+import siteRuleRoutes from './routes/siteRules.js'
+import officeNetworkRoutes from './routes/officeNetworks.js'
 
 const app = express()
 app.set('trust proxy', 1)
 app.use(helmet())
 app.use(express.json({ limit: '1mb' }))
 app.use(cookieParser())
+// The desktop agent uses a device token, not the browser cookie, so it is mounted before the CSRF header check.
+app.use('/api/agent', agentRoutes)
 app.use('/api', requireAppHeader)
 
 app.get('/api/health', (req, res) => res.json({ ok: true }))
 app.use('/api/auth', authRoutes)
 app.use('/api/users', requireAuth, userRoutes)
+app.use('/api/attendance', requireAuth, attendanceRoutes)
+app.use('/api/site-rules', requireAuth, siteRuleRoutes)
+app.use('/api/office-networks', requireAuth, officeNetworkRoutes)
 app.use('/api/projects/:id/proposal', requireAuth, proposalRoutes)
 app.use('/api/projects/:id/timelines', requireAuth, timelineRoutes)
 app.use('/api/projects/:id/assistant', requireAuth, assistantRoutes)

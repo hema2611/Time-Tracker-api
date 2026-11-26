@@ -1,7 +1,7 @@
 # Project Tracker – master plan
 
 One place per client project for the plan, every change request, meetings and what was agreed, so nothing lives only in WhatsApp or email.
-This is a real product for real users, not a demo. It is a standalone project, separate from LMGGT.
+This is a real product for real users, not a demo. It is a standalone project.
 
 Last updated: 24 Nov 2026 (flow, automation, AI and features added; n8n dropped)
 Previous version kept as `OUTLINE_backup_2026-11-24.md`.

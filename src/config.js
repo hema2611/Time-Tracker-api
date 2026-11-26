@@ -34,6 +34,18 @@ export default {
   jwtSecret: need('JWT_SECRET'),
   sessionHours: +(process.env.SESSION_HOURS || 12),
   uploadDir: path.resolve(root, process.env.UPLOAD_DIR || 'uploads'),
+  attendance: {
+    // Office time zone as minutes from UTC (India = 330). A "day" runs midnight to midnight in this zone.
+    tzOffsetMinutes: +(process.env.TZ_OFFSET_MINUTES || 330),
+    // Breaks shorter than this are counted as work (a quick lock to grab water is not a break).
+    minBreakMinutes: +(process.env.MIN_BREAK_MINUTES || 2),
+    // No heartbeat for this long while working = the agent was not running.
+    gapMinutes: +(process.env.AGENT_GAP_MINUTES || 3),
+    // Events that reach the server this much later than they happened (sent after being offline) are flagged.
+    lateMinutes: +(process.env.LATE_EVENT_MINUTES || 15),
+    // Unproductive sites/apps above this many minutes a day get a "Checks" flag for the manager.
+    unproductiveLimitMinutes: +(process.env.UNPRODUCTIVE_LIMIT_MINUTES || 60),
+  },
   ai: {
     provider: (process.env.AI_PROVIDER || '').toLowerCase(),
     geminiKey: process.env.GEMINI_API_KEY || '',
