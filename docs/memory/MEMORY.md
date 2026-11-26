@@ -1,0 +1,6 @@
+- [TIME TRACKER — RESUME HERE](time-tracker-resume-here.md) — 2026-11-26: agent 0.3.0 installed; api/web merged+pushed; theme done; next: test taskbar, extension, Wi-Fi, agent repo; READ FIRST
+- [Agent state + admin-last list](time-tracker-agent-state.md) — folders, decided rules, what's built; IT/admin hardening deliberately LAST
+- [Project tracker history](project-tracker-history.md) — product, stack, DB guard (track_project only), AI, modules/decisions 19–24 Nov
+- [No reinstall per change](tracker-agent-no-reinstall.md) — batch agent changes; build+install only when user says
+- [Standalone project](tracker-standalone.md) — never mix with any other project's memory, repos, DB or config
+- [Web theme: dark + light](tracker-theme.md) — src/theme.css is the only colour source (dark Obsidian / light Pearl, toggle); every page uses it; real ImagiNET logo; readable greys
