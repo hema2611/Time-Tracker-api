@@ -6,6 +6,9 @@ export const pool = mysql.createPool({ ...config.db, connectionLimit: 10, dateSt
 // Second half of the guard: every new connection must really be inside the allowed database,
 // and the code never switches database (no USE, no other-database names in queries).
 pool.on('connection', conn => {
+  // The database server runs in CET. Every session works in UTC so NOW() / CURRENT_TIMESTAMP are UTC;
+  // screens convert to the viewer's (office) time.
+  conn.query("SET time_zone = '+00:00'")
   conn.query('SELECT DATABASE() AS db', (err, rows) => {
     if (err || rows?.[0]?.db !== ALLOWED_DB.database) {
       console.error(`Database guard: connected to "${rows?.[0]?.db}" instead of "${ALLOWED_DB.database}". Stopping.`)

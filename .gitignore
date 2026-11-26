@@ -5,3 +5,4 @@
 uploads/
 *.log
 .claude/settings.local.json
+private_uploads/

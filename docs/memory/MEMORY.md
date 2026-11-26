@@ -4,3 +4,4 @@
 - [No reinstall per change](tracker-agent-no-reinstall.md) — batch agent changes; build+install only when user says
 - [Standalone project](tracker-standalone.md) — never mix with any other project's memory, repos, DB or config
 - [Web theme: dark + light](tracker-theme.md) — src/theme.css is the only colour source (dark Obsidian / light Pearl, toggle); every page uses it; real ImagiNET logo; readable greys
+- [Masters + Work modules](masters-work-modules.md) — leave, repo links, reimbursements (payment status), work allotment; PIN login left to colleague; update after every change

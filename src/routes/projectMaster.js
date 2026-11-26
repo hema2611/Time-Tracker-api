@@ -2,6 +2,7 @@
 import { Router } from 'express'
 import { z } from 'zod'
 import { query } from '../db.js'
+import { requirePerm } from '../middleware/permissions.js'
 
 const r = Router()
 
@@ -14,7 +15,7 @@ const schema = z.object({
 })
 const COLS = ['name', 'client_name', 'address', 'contact_person', 'status']
 
-r.get('/', async (req, res) => {
+r.get('/', requirePerm('projects', 'view'), async (req, res) => {
   const activeOnly = req.query.status === 'active'
   const rows = await query(
     `SELECT id, name, client_name, address, contact_person, status, created_at, updated_at
@@ -23,7 +24,7 @@ r.get('/', async (req, res) => {
   res.json({ projects: rows })
 })
 
-r.post('/', async (req, res) => {
+r.post('/', requirePerm('projects', 'create'), async (req, res) => {
   const body = schema.parse(req.body)
   const { insertId } = await query(
     `INSERT INTO project_master (${COLS.join(', ')}) VALUES (${COLS.map(() => '?').join(', ')})`,
@@ -32,7 +33,7 @@ r.post('/', async (req, res) => {
   res.status(201).json({ id: insertId })
 })
 
-r.put('/:id', async (req, res) => {
+r.put('/:id', requirePerm('projects', 'edit'), async (req, res) => {
   const body = schema.parse(req.body)
   const { affectedRows } = await query(
     `UPDATE project_master SET ${COLS.map(c => `${c} = ?`).join(', ')} WHERE id = ?`,
@@ -42,7 +43,7 @@ r.put('/:id', async (req, res) => {
   res.json({ ok: true })
 })
 
-r.delete('/:id', async (req, res) => {
+r.delete('/:id', requirePerm('projects', 'edit'), async (req, res) => {
   const { affectedRows } = await query('DELETE FROM project_master WHERE id = ?', [req.params.id])
   if (!affectedRows) return res.status(404).json({ error: 'Project not found.' })
   res.json({ ok: true })

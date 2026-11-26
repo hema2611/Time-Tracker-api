@@ -16,6 +16,12 @@ import projectRoutes from './routes/projectMaster.js'
 import configRoutes from './routes/config.js'
 import holidayRoutes from './routes/holidays.js'
 import eventRoutes from './routes/events.js'
+import permissionRoutes from './routes/permissions.js'
+import leaveRoutes from './routes/leaves.js'
+import projectRepoRoutes from './routes/projectRepositories.js'
+import reimbursementRoutes from './routes/reimbursements.js'
+import workAllotmentRoutes from './routes/workAllotments.js'
+import ticketRoutes from './routes/tickets.js'
 
 const app = express()
 app.set('trust proxy', 1)
@@ -32,14 +38,20 @@ app.use('/api/uploads', express.static(config.uploadDir))
 
 app.use('/api', requireAppHeader)
 
-// Login/logout is owned by a colleague; kept intact. The masters open without a login for now.
+// Login/logout is owned by a colleague; masters require a signed-in session.
 app.use('/api/auth', authRoutes)
-app.use('/api/roles', roleRoutes)
-app.use('/api/employees', employeeRoutes)
-app.use('/api/project-master', projectRoutes)
+app.use('/api/roles', requireAuth, roleRoutes)
+app.use('/api/permissions', requireAuth, permissionRoutes)
+app.use('/api/employees', requireAuth, employeeRoutes)
+app.use('/api/project-master', requireAuth, projectRoutes)
 app.use('/api/config', configRoutes)
 app.use('/api/holidays', holidayRoutes)
 app.use('/api/events', eventRoutes)
+app.use('/api/leaves', requireAuth, leaveRoutes)
+app.use('/api/project-repositories', requireAuth, projectRepoRoutes)
+app.use('/api/reimbursements', requireAuth, reimbursementRoutes)
+app.use('/api/work-allotments', requireAuth, workAllotmentRoutes)
+app.use('/api/tickets', requireAuth, ticketRoutes)
 app.use('/api/attendance', requireAuth, attendanceRoutes)
 app.use('/api/site-rules', requireAuth, siteRuleRoutes)
 app.use('/api/office-networks', requireAuth, officeNetworkRoutes)
