@@ -1,6 +1,7 @@
 // Events with multi-select attendees.
 import { Router } from 'express'
 import { z } from 'zod'
+import { assertNotPast } from '../officeTime.js'
 import { query, transaction } from '../db.js'
 
 const r = Router()
@@ -50,8 +51,15 @@ async function saveAttendees(db, eventId, ids) {
   }
 }
 
+// Past events are read-only.
+async function assertEditable(id) {
+  const [x] = await query('SELECT event_date FROM events WHERE id = ?', [id])
+  if (x) assertNotPast(x.event_date, 'Events')
+}
+
 r.post('/', async (req, res) => {
   const b = schema.parse(req.body)
+  assertNotPast(b.event_date, 'Events')
   const id = await transaction(async db => {
     const { insertId } = await db.query(
       `INSERT INTO events (title, event_type_id, event_date, start_time, end_time, location, description, status)
@@ -66,6 +74,8 @@ r.post('/', async (req, res) => {
 
 r.put('/:id', async (req, res) => {
   const b = schema.parse(req.body)
+  await assertEditable(req.params.id)
+  assertNotPast(b.event_date, 'Events')
   const ok = await transaction(async db => {
     const { affectedRows } = await db.query(
       `UPDATE events SET title = ?, event_type_id = ?, event_date = ?, start_time = ?, end_time = ?, location = ?, description = ?, status = ? WHERE id = ?`,
@@ -80,6 +90,7 @@ r.put('/:id', async (req, res) => {
 })
 
 r.delete('/:id', async (req, res) => {
+  await assertEditable(req.params.id)
   const { affectedRows } = await query('DELETE FROM events WHERE id = ?', [req.params.id])
   if (!affectedRows) return res.status(404).json({ error: 'Event not found.' })
   res.json({ ok: true })
