@@ -1,23 +1,19 @@
 ---
 name: tracker-theme
-description: "Tracker web theme \"Obsidian & Violet\" — single theme file Time-Tracker-web/src/theme.css; every page must use it; real ImagiNET logo only"
+description: STRICT — before ANY UI/design work (web app or agent windows) read Time-Tracker-web/DESIGN.md and the /design prototypes; they override the current look
 metadata:
-  node_type: memory
   type: feedback
-  originSessionId: a9f251d7-30d1-4c5e-ab34-c941d729050c
-  modified: 2026-11-26T06:04:24.468Z
 ---
 
-Every page of the tracker web app (Time-Tracker-web) uses ONE theme file: `src/theme.css` (imported by index.css). Theme = "Obsidian & Violet", derived from the ImagiNET Ventures logo (chrome violet wordmark + faceted triangles, violet orb): canvas #07060B, surface #0E0C16, elevated #151226, sidebar #0A0911, hairline rgba(167,139,250,.14), brand-deep #45297F, violet #7C5CE0, violet-light #A78BFA, sheen #DCCFFD, text fg #F4F2FA / fg-2 #BDB8CE / fg-3 #9A96A8.
+**Before designing anything** (web pages, agent windows, popups, widget): read `C:\Users\Hp\Documents\GitHub\Time-Tracker-web\DESIGN.md` first and match the prototype in `Time-Tracker-web/design/` if one exists for that screen. User said (2026-11-27): "always use this and refer this before designing".
 
-Two themes (added 2026-11-26): dark (default) and light "Pearl & Violet" (canvas #F6F4FB, surface #FFFFFF, violet #6A45D6, text #17131F/#4A4458/#625C70). Same class names; values in theme.css under :root (dark) and [data-theme="light"]; `@theme inline` maps names → --t-* vars. Switch = ThemeToggle in src/lib/theme.jsx (menu footer, phone header, sign-in corner), saved in localStorage `tracker.theme`, first visit follows OS; index.html sets data-theme before paint.
+LOGOS (user, 2026-11-27): single icon anywhere (favicon, agent app/tray/installer icon, extension icon, collapsed sidebar, popups) = the W mark (three violet triangles): web public/brand/imaginet-mark.png / <Mark/>, agent assets/mark.png + icon.png/icon.ico/tray*.png, extension icon16/48/128. Full logo with name = ImagiNET Ventures wordmark (web imaginet-logo-clear.png / <Brand/>, agent assets/logo.png). Never the old round orb, never hand-drawn SVG triangles. DESIGN.md §0.
 
-Rules:
-- Every new colour needs a dark AND a light value. Never `text-white` for normal text (vanishes in light) → text-fg; white only on violet/coloured fills. Overlays/backdrops = bg-black/NN, never slate-900/NN (slate flips between themes).
-- No hex/rgba in pages. Use semantic classes (bg-canvas, bg-surface, bg-elevated, border-line, text-fg/-fg-2/-fg-3, bg-violet, shadow-glow, shadow-pop, cat-work/away/idle/break/off) or the re-pointed Tailwind names (slate/indigo/green/amber/red map onto the theme). Cards = bg-surface, never bg-white.
-- Text must stay readable on the dark background (≥7:1). User complained grey text was invisible on black (2026-11-26) → lifted greys; never add darker grey text.
-- Logo = the ORIGINAL ImagiNET Ventures logo (original has a black matte; app uses public/brand/imaginet-logo-clear.png made transparent by a script; orb = imaginet-orb.png; sources in Time-Tracker-agent/assets). Never an invented "iN" tile, never stretched (keep self-start/object-contain, h-8). Light theme deepens it with class `brand-word`.
-- New colours go into theme.css first, then get used.
+Prototypes saved in Time-Tracker-web/design/: tracker-light-prototype.html (web sign-in + Attendance), agent-window-prototype.html (agent sign-in + main window), agent-floating-widget.html (dot/pill/expanded widget), palette-from-logo.html (brand scale + tokens + contrast).
 
-**Why:** user (2026-11-26) asked for a theme file based on the logo and that every page use it; then asked to replace the made-up "iN" mark with the original logo.
-**How to apply:** any new or changed web page/component: read theme.css, use its names only; also apply the same palette to the desktop agent UI when it's restyled. Related: [[project-tracker-history]], [[time-tracker-agent-state]].
+Key rules (full detail in DESIGN.md): pure white (light) / pure black (dark) page; tokens bg, surface, surface-2, line, fg/fg-2/fg-3, violet, violet-strong, violet-tint, ok/away/idle/brk/off; brand purple ONLY from the logo scale #1A0833…#F4EDFA (no indigo/blue purples); --grad-brand for buttons/ring, --grad-panel only on sign-in panel; Outfit light (never bold) titles, Inter UI, JetBrains Mono tabular for times; cards = surface + hairline line + shadow-card, radii 11/16/22; sidebar active = violet-tint + 3px violet bar; details in a right drawer; violet never means a status; pages use only theme tokens, no hex. Agent windows must share tokens with the web app (tokens.css generated from web theme.css, fonts bundled locally).
+
+State 2026-11-27 (later): theme.css MOVED to DESIGN.md tokens (old slate/indigo/cat-* names re-pointed as aliases; --color-white is real white); components/ui.jsx has Button/Input(Show-Hide)/Card/Chip/StatusDot/Avatar/KpiCard/Drawer/ProgressRing/Skeleton/EmptyState; Login (+forgot/reset) and Attendance rebuilt; colleague pages (Tickets, Leave, Reimbursements, Work Allotment, Repo) still use old names = to restyle.
+
+**Why:** user wants one consistent premium look and was unhappy when pages kept the old look.
+**How to apply:** read DESIGN.md before any UI change; follow its "Never do this" list; check both themes in the browser before finishing.

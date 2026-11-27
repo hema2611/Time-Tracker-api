@@ -24,3 +24,9 @@ Location (2026-11-25): check-in/out place from what's available only — network
 
 **Why:** user wants features finished first and IT/admin hardening done together at the end.
 **How to apply:** don't start these unprompted; remind the user of this list when features are done or before any staff rollout.
+
+**TEST SETTINGS ACTIVE (2026-11-26) — remove before rollout:** Time-Tracker-agent/agent-config.json "test" block = idle after 60 s and break question after EVERY break (breakAskSeconds 1). Real values: 600 s idle, 15 min ask. Prayer and Health/medical break reasons removed (agent + API BREAK_REASONS); old answers with those reasons are now ignored.
+
+**2026-11-27 battery fix:** agent didn't come back after sleep/wake on battery — the restart task had Windows' default "don't start on battery". Fixed on this PC with Set-ScheduledTask; build/installer.nsh now sets AllowStartIfOnBatteries + DontStopIfGoingOnBatteries + StartWhenAvailable (needs next rebuild to ship). Run key only fires at sign-in, not on wake — the task is what covers wake.
+
+**2026-11-27 greeting popup (built, NOT installed):** greet.html + greet() in main.js — "Good morning/afternoon/evening, <first name>! You are checked in at HH:MM" with Okay; once per day on first agent start / wake / unlock when signed in; waits until any break question is answered; stores day in userData/greeted.json. Test flag agent-config.json test.greetEveryTime = true shows it every time (not set yet).

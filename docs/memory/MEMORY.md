@@ -1,7 +1,8 @@
-- [TIME TRACKER — RESUME HERE](time-tracker-resume-here.md) — 2026-11-26: agent 0.3.0 installed; api/web merged+pushed; theme done; next: test taskbar, extension, Wi-Fi, agent repo; READ FIRST
+- [STRICT: update memory at 90% token limit](memory-at-90-percent.md) — pending, stop point, uncommitted, stash, to-merge, conflicts per repo
+- [TIME TRACKER — RESUME HERE](time-tracker-resume-here.md) — 2026-11-27: colleague merged, DESIGN.md theme, forgot-password, + Add new, W logo; pushed api+web; agent not rebuilt; open: work-time split + EOD + notifications (awaiting answers); READ FIRST
 - [Agent state + admin-last list](time-tracker-agent-state.md) — folders, decided rules, what's built; IT/admin hardening deliberately LAST
 - [Project tracker history](project-tracker-history.md) — product, stack, DB guard (track_project only), AI, modules/decisions 19–24 Nov
 - [No reinstall per change](tracker-agent-no-reinstall.md) — batch agent changes; build+install only when user says
 - [Standalone project](tracker-standalone.md) — never mix with any other project's memory, repos, DB or config
-- [Web theme: dark + light](tracker-theme.md) — src/theme.css is the only colour source (dark Obsidian / light Pearl, toggle); every page uses it; real ImagiNET logo; readable greys
+- [STRICT: read DESIGN.md before any UI](tracker-theme.md) — Time-Tracker-web/DESIGN.md + /design prototypes override the current look; tokens, fonts, never-do list
 - [Masters + Work modules](masters-work-modules.md) — leave, repo links, reimbursements (payment status), work allotment; PIN login left to colleague; update after every change

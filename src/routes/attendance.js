@@ -13,6 +13,10 @@ const placeText = p => !p ? '' : [p.place ? (p.label ? `${p.place} (${p.label})`
 const mapLink = p => (p?.lat !== undefined ? `https://www.google.com/maps?q=${p.lat},${p.lon}` : '')
 
 const canSeeTeam = u => u.role === 'admin' || u.role === 'tl'
+// Only these roles are tracked (team lead, developers, designers, testers). Admin and clients are not.
+const TRACKED = config.attendance.trackedRoles
+const tracked = role => TRACKED.includes(role)
+const IN_TRACKED = `role IN (${TRACKED.map(() => '?').join(', ')})`
 const dateParam = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Pick a valid date.').optional()
 
 r.use((req, res, next) => req.user.role === 'client' ? res.status(403).json({ error: 'You do not have access to this.' }) : next())
@@ -22,8 +26,10 @@ r.get('/day', async (req, res) => {
   const date = dateParam.parse(req.query.date) || today()
   const userId = req.query.userId ? +req.query.userId : req.user.id
   if (userId !== req.user.id && !canSeeTeam(req.user)) return res.status(403).json({ error: 'You can only see your own attendance.' })
-  const [person] = await query("SELECT id, name, role FROM users WHERE id = ? AND role <> 'client'", [userId])
-  if (!person) return res.status(404).json({ error: 'Person not found.' })
+  // Not tracked (admin): no day of their own; the page shows the team instead.
+  if (userId === req.user.id && !tracked(req.user.role)) return res.json({ date, today: today(), person: null, tracked: false })
+  const [person] = await query(`SELECT id, name, role FROM users WHERE id = ? AND ${IN_TRACKED}`, [userId, ...TRACKED])
+  if (!person) return res.status(404).json({ error: 'Attendance is not tracked for this person.' })
   const devices = await query(
     'SELECT name, platform, agent_version AS version, last_seen_at AS lastSeen FROM agent_devices WHERE user_id = ? AND revoked_at IS NULL ORDER BY last_seen_at DESC', [userId])
   res.json({ date, today: today(), person, devices, day: await dayFor(userId, date) })
@@ -36,7 +42,7 @@ r.get('/team', async (req, res) => {
   const people = await query(
     `SELECT u.id, u.name, u.role, COUNT(d.id) AS devices
        FROM users u LEFT JOIN agent_devices d ON d.user_id = u.id AND d.revoked_at IS NULL
-      WHERE u.role <> 'client' AND u.status = 'active' GROUP BY u.id ORDER BY u.name`)
+      WHERE u.${IN_TRACKED} AND u.status = 'active' GROUP BY u.id ORDER BY u.name`, TRACKED)
   const rows = []
   for (const p of people) {
     const d = await dayFor(p.id, date)
@@ -56,8 +62,8 @@ r.get('/month', async (req, res) => {
   const month = z.string().regex(/^\d{4}-\d{2}$/, 'Pick a valid month.').optional().parse(req.query.month) || today().slice(0, 7)
   const lead = canSeeTeam(req.user)
   const people = lead
-    ? await query("SELECT id, name, role FROM users WHERE role <> 'client' AND status = 'active' ORDER BY name")
-    : [{ id: req.user.id, name: req.user.name, role: req.user.role }]
+    ? await query(`SELECT id, name, role FROM users WHERE ${IN_TRACKED} AND status = 'active' ORDER BY name`, TRACKED)
+    : tracked(req.user.role) ? [{ id: req.user.id, name: req.user.name, role: req.user.role }] : []
 
   const off = config.attendance.tzOffsetMinutes * 60 * 1000
   const clock = s => s ? new Date(Date.parse(s) + off).toISOString().slice(11, 16) : ''

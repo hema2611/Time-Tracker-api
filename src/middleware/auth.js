@@ -21,9 +21,11 @@ export const publicUser = u => ({
 // The user is re-read on every request, so deactivating someone takes effect immediately.
 export async function requireAuth(req, res, next) {
   try {
-    const { uid } = jwt.verify(req.cookies?.[COOKIE] || '', config.jwtSecret)
+    const { uid, iat } = jwt.verify(req.cookies?.[COOKIE] || '', config.jwtSecret)
     const [user] = await query('SELECT * FROM users WHERE id = ?', [uid])
     if (!user || user.status !== 'active') throw new Error('inactive')
+    // A password reset or change signs out every session started before it (times are UTC).
+    if (user.password_changed_at && iat * 1000 < Date.parse(user.password_changed_at.replace(' ', 'T') + 'Z')) throw new Error('old session')
     req.user = user
     next()
   } catch {

@@ -35,6 +35,9 @@ export default {
   sessionHours: +(process.env.SESSION_HOURS || 12),
   uploadDir: path.resolve(root, process.env.UPLOAD_DIR || 'uploads'),
   attendance: {
+    // Login roles whose hours are tracked. Web and full-stack developers sign in as 'developer'.
+    // Admin (and HR, who signs in as admin) and clients are not tracked; admin still sees everyone's attendance.
+    trackedRoles: ['tl', 'developer', 'designer', 'tester'],
     // Office time zone as minutes from UTC (India = 330). A "day" runs midnight to midnight in this zone.
     tzOffsetMinutes: +(process.env.TZ_OFFSET_MINUTES || 330),
     // Breaks shorter than this are counted as work (a quick lock to grab water is not a break).

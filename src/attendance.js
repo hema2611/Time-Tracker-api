@@ -25,7 +25,6 @@ const AWAY = { lock: 'Screen locked', suspend: 'Sleep', idle_start: 'Idle' }
 // Answers to the agent's "what was this break?" question. work: true = it was work away from the desk.
 export const BREAK_REASONS = {
   lunch: { label: 'Lunch' }, tea: { label: 'Tea / coffee' }, personal: { label: 'Personal' },
-  health: { label: 'Health / medical' }, prayer: { label: 'Prayer' },
   meeting: { label: 'Meeting', work: true }, client_call: { label: 'Client call', work: true },
   training: { label: 'Training / learning', work: true }, work_away: { label: 'Work away from desk', work: true },
   pc_issue: { label: 'PC / power / internet problem' },
@@ -230,45 +229,45 @@ export function patternFlags(events, day) {
 
   // Sent late: events that reached the server long after they happened (offline, or edited before sending).
   const late = real.filter(e => e.receivedAt && e.receivedAt - e.at > lateMinutes * MIN)
-  if (late.length) flags.push({ code: 'sent_late', text: `${late.length} event(s) reached the server more than ${lateMinutes} min after they happened` })
+  if (late.length) flags.push({ code: 'sent_late', text: `Some of the day's activity was sent late (${late.length} updates, over ${lateMinutes} min after they happened). Usually the computer was offline for a while.` })
 
   // PC clock: an event "happened" clearly after it arrived = the PC clock is ahead.
   const ahead = real.filter(e => e.receivedAt && e.at - e.receivedAt > 2 * MIN)
-  if (ahead.length) flags.push({ code: 'clock', text: 'The PC clock looks wrong (event times are ahead of the server)' })
+  if (ahead.length) flags.push({ code: 'clock', text: 'The computer clock is set wrong, so some times may be off.' })
 
   // Too perfect: 4+ hours of work with no lock, idle, sleep or break at all, and input never paused 30 s.
   const pauses = real.filter(e => ['lock', 'unlock', 'idle_start', 'idle_end', 'suspend', 'resume'].includes(e.type)).length
   const beats = real.filter(e => e.type === 'heartbeat')
   const withSignals = beats.filter(e => e.signals)
   if (day.workMinutes >= 240 && !pauses && withSignals.length >= 60 && withSignals.every(e => e.signals.idle < 30)) {
-    flags.push({ code: 'too_perfect', text: 'Constant activity for 4+ hours: no lock, no idle, input never paused for 30 seconds (possible mouse jiggler or script)' })
+    flags.push({ code: 'too_perfect', text: 'Non-stop activity for over 4 hours without a single pause. A person normally stops now and then; a mouse-moving gadget or script does not.' })
   }
   // Signals missing: an up-to-date agent always sends them; heartbeats without them may come from a script.
   if (withSignals.length && beats.length - withSignals.length > 10) {
-    flags.push({ code: 'no_signals', text: `${beats.length - withSignals.length} heartbeats came without the usual activity details` })
+    flags.push({ code: 'no_signals', text: `The agent sent ${beats.length - withSignals.length} updates without the usual details. It may be an old or changed copy of the agent.` })
   }
   // Two computers reporting for the same person in the same minutes (agent on a second PC or a VM).
   const byMinute = {}
   for (const e of beats) if (e.device) (byMinute[Math.floor(e.at / MIN)] ||= new Set()).add(e.device)
   const both = Object.values(byMinute).filter(s => s.size > 1).length
-  if (both >= 5) flags.push({ code: 'two_pcs', text: `Two computers were active for this person at the same time for ${both} min` })
+  if (both >= 5) flags.push({ code: 'two_pcs', text: `Two computers were in use for this person at the same time (${both} min).` })
 
   // Much of the day answered as Meeting / Client call / Work away: worth checking against calendars.
   if (day.awayWorkMinutes >= 120 || (day.workMinutes >= 120 && day.awayWorkMinutes / day.workMinutes >= 0.4)) {
     const by = (day.awayWork || []).map(a => `${a.reason} ${a.minutes}m`).join(', ')
-    flags.push({ code: 'away_heavy', text: `${day.awayWorkMinutes} min of the day answered as away work (${by})` })
+    flags.push({ code: 'away_heavy', text: `A lot of the day was marked as work away from the desk: ${day.awayWorkMinutes} min (${by}).` })
   }
 
   // Unproductive sites/apps over the daily limit.
   if (day.unproductiveMinutes >= unproductiveLimitMinutes) {
     const top = day.unproductive.slice(0, 3).map(u => `${u.label} ${u.minutes}m`).join(', ')
-    flags.push({ code: 'unproductive', text: `${day.unproductiveMinutes} min on unproductive sites/apps (${top})` })
+    flags.push({ code: 'unproductive', text: `${day.unproductiveMinutes} min on non-work sites or apps (${top}).` })
   }
   // Browser extension: a browser in front but no report from the extension = removed or turned off.
   const noExt = withSignals.filter(e => e.signals.browser && e.signals.ext === false).length
-  if (noExt >= 10) flags.push({ code: 'no_extension', text: `Browser used ${noExt} min without the tracker extension (removed or turned off?)` })
+  if (noExt >= 10) flags.push({ code: 'no_extension', text: `The browser was used for ${noExt} min without the tracker extension. It may have been removed or turned off.` })
   const other = withSignals.filter(e => e.signals.browser === 'other').length
-  if (other >= 10) flags.push({ code: 'other_browser', text: `${other} min in a browser without the tracker extension (not Chrome / Edge)` })
+  if (other >= 10) flags.push({ code: 'other_browser', text: `${other} min in a browser the tracker cannot see (not Chrome or Edge).` })
 
   return { flags, aiBeats: withSignals.filter(e => e.signals.ai).length, hasSignals: withSignals.length > 0 }
 }
@@ -279,14 +278,14 @@ async function dayFlags(userId, events, day, start, end) {
 
   // Network: addresses used today vs the last 14 days.
   const today = [...new Set(events.map(e => e.ip).filter(Boolean))]
-  if (today.length > 1) flags.push({ code: 'many_networks', text: `Messages came from ${today.length} different networks today (${today.join(', ')})` })
+  if (today.length > 1) flags.push({ code: 'many_networks', text: `Worked from ${today.length} different internet connections today (${today.join(', ')}).` })
   if (today.length) {
     const before = await query(
       'SELECT DISTINCT ip FROM activity_events WHERE user_id = ? AND occurred_at >= ? AND occurred_at < ? AND ip IS NOT NULL',
       [userId, dbTime(start - 14 * 24 * 60 * MIN), dbTime(start)])
     const known = new Set(before.map(r => r.ip))
     const fresh = today.filter(ip => !known.has(ip))
-    if (before.length && fresh.length) flags.push({ code: 'new_network', text: `New network not seen in the last 14 days: ${fresh.join(', ')}` })
+    if (before.length && fresh.length) flags.push({ code: 'new_network', text: `Worked from a new internet connection, not used in the last 2 weeks (${fresh.join(', ')}).` })
   }
 
   // Agent silent during office hours today (ended, uninstalled, blocked, or the PC switched off) after the person started.
@@ -296,7 +295,7 @@ async function dayFlags(userId, events, day, start, end) {
     const lastAt = Math.max(...events.map(e => e.at))
     if (hour >= officeStartHour && hour < officeEndHour && now - lastAt > silentMinutes * MIN) {
       const since = new Date(lastAt + tzOffsetMinutes * MIN).toISOString().slice(11, 16)
-      flags.push({ code: 'silent', text: `Agent silent since ${since} (no messages for ${Math.round((now - lastAt) / MIN)} min during office hours)` })
+      flags.push({ code: 'silent', text: `No word from the agent since ${since} (${Math.round((now - lastAt) / MIN)} min) during office hours. The computer or the agent may be off.` })
     }
   }
 
@@ -305,7 +304,7 @@ async function dayFlags(userId, events, day, start, end) {
     [dbTime(start), userId, dbTime(end)])
   const fresh = pcs.filter(p => p.fresh)
   if (fresh.length && pcs.length > fresh.length) {
-    flags.push({ code: 'new_pc', text: `New computer signed in today: ${[...new Set(fresh.map(p => p.name))].join(', ')}` })
+    flags.push({ code: 'new_pc', text: `Signed in on a new computer today: ${[...new Set(fresh.map(p => p.name))].join(', ')}.` })
   }
 
   // Real work: long hours but nothing done in the tracker and (when known) no Claude activity.
@@ -315,7 +314,7 @@ async function dayFlags(userId, events, day, start, end) {
          AND CONVERT_TZ(created_at, 'SYSTEM', '+00:00') >= ? AND CONVERT_TZ(created_at, 'SYSTEM', '+00:00') < ?`,
       [userId, dbTime(start), dbTime(end)])
     if (!n && (!hasSignals || !aiBeats)) {
-      flags.push({ code: 'no_output', text: `${Math.round(day.workMinutes / 60)}+ hours worked but no activity in the tracker${hasSignals ? ' and no Claude use' : ''}` })
+      flags.push({ code: 'no_output', text: `${Math.round(day.workMinutes / 60)}+ hours at work, but no updates in the tracker${hasSignals ? ' and no Claude use' : ''}.` })
     }
   }
   return flags

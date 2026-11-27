@@ -7,6 +7,7 @@ import rateLimit from 'express-rate-limit'
 import { z } from 'zod'
 import { query, audit } from '../db.js'
 import { dayFor, today } from '../attendance.js'
+import config from '../config.js'
 
 const r = Router()
 const db = { query }
@@ -33,10 +34,16 @@ r.post('/pair', pairLimit, async (req, res) => {
     await audit(db, req, 'agent_pair_failed', 'user', user?.id ?? null, { email: b.email, device: b.deviceName })
     return res.status(401).json({ error: 'Email or password is wrong.' })
   }
-  // Only the team's working hours are tracked: client accounts cannot use the agent.
-  if (user.role === 'client') {
-    await audit(db, req, 'agent_pair_refused', 'user', user.id, { reason: 'client account', device: b.deviceName })
-    return res.status(403).json({ error: 'Client accounts cannot use the desktop agent.' })
+  // Only tracked roles (team lead, developers, designers, testers) use the agent; admin, HR and clients do not.
+  if (!config.attendance.trackedRoles.includes(user.role)) {
+    await audit(db, req, 'agent_pair_refused', 'user', user.id, { reason: `role ${user.role} not tracked`, device: b.deviceName })
+    return res.status(403).json({ error: 'Attendance is not tracked for your role, so this computer does not need the agent.' })
+  }
+  // Only people added in the Employee Master, still working here, can use the agent.
+  const [emp] = await query("SELECT id FROM employees WHERE user_id = ? AND status IN ('active', 'notice_period')", [user.id])
+  if (!emp) {
+    await audit(db, req, 'agent_pair_refused', 'user', user.id, { reason: 'no active employee record', device: b.deviceName })
+    return res.status(403).json({ error: 'You are not in the Employee Master yet. Ask your admin to add you, then sign in again.' })
   }
   const token = crypto.randomBytes(32).toString('hex')
   const { insertId } = await query(
@@ -57,14 +64,16 @@ async function requireDevice(req, res, next) {
   let d
   try {
     [d] = await query(
-      `SELECT d.id, d.user_id, d.name, u.name AS user_name, u.email AS user_email, u.status, u.role
+      `SELECT d.id, d.user_id, d.name, u.name AS user_name, u.email AS user_email, u.status, u.role, e.id AS employee_id
          FROM agent_devices d JOIN users u ON u.id = d.user_id
+         LEFT JOIN employees e ON e.user_id = u.id AND e.status IN ('active', 'notice_period')
         WHERE d.token_hash = ? AND d.revoked_at IS NULL`, [sha256(token)])
   } catch (e) {
     console.error('agent auth: database error', e.message)
     return res.status(503).json({ error: 'Server busy. Try again shortly.' })
   }
-  if (!d || d.status !== 'active' || d.role === 'client') return signedOut()
+  // Removed from the Employee Master (or left) = this computer is signed out, same as a closed login.
+  if (!d || d.status !== 'active' || !config.attendance.trackedRoles.includes(d.role) || !d.employee_id) return signedOut()
   req.device = d
   next()
 }
@@ -79,7 +88,7 @@ r.get('/rules', requireDevice, async (req, res) => {
 // The person's own day so far, for the agent window (timer ring, day strip, status).
 r.get('/today', requireDevice, async (req, res) => {
   const d = await dayFor(req.device.user_id, today())
-  res.json({ status: d.status, firstIn: d.firstIn, workMinutes: d.workMinutes, deskWorkMinutes: d.deskWorkMinutes,
+  res.json({ status: d.status, firstIn: d.firstIn, place: d.location?.in?.label || d.location?.in?.place || null, workMinutes: d.workMinutes, deskWorkMinutes: d.deskWorkMinutes,
     awayWorkMinutes: d.awayWorkMinutes, idleMinutes: d.idleMinutes, breakMinutes: d.breakMinutes, pieces: d.pieces, at: new Date().toISOString() })
 })
 
